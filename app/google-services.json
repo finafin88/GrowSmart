@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "239837841005",
+    "project_id": "growsmart-dd4b7",
+    "storage_bucket": "growsmart-dd4b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239837841005:android:fc259134c50ce634222164",
+        "android_client_info": {
+          "package_name": "com.growsmart.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsme632IRi12Nt3B8W2ELKaXE_jnsFwOY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
