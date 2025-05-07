@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.FirebaseDatabase
-import com.example.growsmart.mobile.SensorData
-
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SensorInputScreen(status: String = "") {
+fun SensorInputScreen() {
     var suhu by remember { mutableStateOf("") }
     var ph by remember { mutableStateOf("") }
     var tds by remember { mutableStateOf("") }
@@ -43,9 +42,24 @@ fun SensorInputScreen(status: String = "") {
     ) {
         Text(text = "Input Data Sensor", style = MaterialTheme.typography.titleLarge)
 
-        OutlinedTextField(value = suhu, onValueChange = { suhu = it }, label = { Text("Suhu (°C)") })
-        OutlinedTextField(value = ph, onValueChange = { ph = it }, label = { Text("pH") })
-        OutlinedTextField(value = tds, onValueChange = { tds = it }, label = { Text("TDS (ppm)") })
+        OutlinedTextField(
+            value = suhu,
+            onValueChange = { suhu = it },
+            label = { Text("Suhu (°C)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        OutlinedTextField(
+            value = ph,
+            onValueChange = { ph = it },
+            label = { Text("pH") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        OutlinedTextField(
+            value = tds,
+            onValueChange = { tds = it },
+            label = { Text("TDS (ppm)") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
         Button(
             onClick = {
@@ -70,9 +84,12 @@ fun SensorInputScreen(status: String = "") {
         if (statusText.isNotEmpty()) {
             Text(
                 text = statusText,
-                color = if (statusText.startsWith("Data berhasil")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                color = if (statusText.startsWith("Data berhasil"))
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
 }
-
