@@ -1,4 +1,4 @@
-package com.growsmart.mobile.model
+package com.growsmart.mobile
 
 data class SensorData(
     val suhu: Double = 0.0,
