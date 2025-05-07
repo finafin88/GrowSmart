@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.database.FirebaseDatabase
 import com.growsmart.mobile.SensorData
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,37 +40,58 @@ fun SensorInputScreen() {
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text(text = "Input Data Sensor", style = MaterialTheme.typography.titleLarge)
+
         OutlinedTextField(
             value = suhu,
             onValueChange = { suhu = it },
-            label = { Text("Suhu (°C)") }
+            label = { Text("Suhu (°C)") },
+            modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
             value = ph,
             onValueChange = { ph = it },
-            label = { Text("pH") }
+            label = { Text("pH") },
+            modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedTextField(
             value = tds,
             onValueChange = { tds = it },
-            label = { Text("TDS (ppm)") }
+            label = { Text("TDS (ppm)") },
+            modifier = Modifier.fillMaxWidth()
         )
-        Button(onClick = {
-            val data = SensorData(
-                suhu = suhu.toDoubleOrNull() ?: 0.0,
-                ph = ph.toDoubleOrNull() ?: 0.0,
-                tds = tds.toDoubleOrNull() ?: 0.0
-            )
-            val timestamp = System.currentTimeMillis().toString()
-            ref.child(timestamp).setValue(data)
-                .addOnSuccessListener { status = "✅ Data berhasil dikirim ke Firebase" }
-                .addOnFailureListener { status = "❌ Gagal mengirim data" }
-        }) {
+
+        Button(
+            onClick = {
+                val data = SensorData(
+                    suhu = suhu.toDoubleOrNull() ?: 0.0,
+                    ph = ph.toDoubleOrNull() ?: 0.0,
+                    tds = tds.toDoubleOrNull() ?: 0.0
+                )
+                val timestamp = System.currentTimeMillis().toString()
+                ref.child(timestamp).setValue(data)
+                    .addOnSuccessListener {
+                        status = "✅ Data berhasil dikirim ke Firebase"
+                        suhu = ""
+                        ph = ""
+                        tds = ""
+                    }
+                    .addOnFailureListener {
+                        status = "❌ Gagal mengirim data"
+                    }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Kirim ke Firebase")
         }
 
         if (status.isNotEmpty()) {
-            Text(text = status)
+            Text(
+                text = status,
+                color = if (status.startsWith("✅")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
         }
     }
 }
