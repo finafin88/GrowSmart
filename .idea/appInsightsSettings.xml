@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.growsmart.mobile" />
-                  <option name="mobileSdkAppId" value="1:239837841005:android:fc259134c50ce634222164" />
-                  <option name="projectId" value="growsmart-dd4b7" />
-                  <option name="projectNumber" value="239837841005" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -11,6 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,20 +51,19 @@ fun SensorInputScreen() {
         OutlinedTextField(
             value = suhu,
             onValueChange = { suhu = it },
-            label = { Text("Suhu (°C)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            label = { Text("Suhu (°C)") }
         )
+
         OutlinedTextField(
             value = ph,
             onValueChange = { ph = it },
-            label = { Text("pH") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            label = { Text("pH") }
         )
+
         OutlinedTextField(
             value = tds,
             onValueChange = { tds = it },
-            label = { Text("TDS (ppm)") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            label = { Text("TDS (ppm)") }
         )
 
         Button(
