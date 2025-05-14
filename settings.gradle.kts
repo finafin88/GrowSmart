@@ -1,13 +1,8 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal() // WAJIB untuk plugin Kotlin
         google()
-        gradlePluginPortal()
         mavenCentral()
-    }
-    plugins {
-        id("com.android.application") version "8.9.2"
-        id("org.jetbrains.kotlin.android") version "1.9.0"
-        id("com.google.gms.google-services") version "4.4.0"
     }
 }
 

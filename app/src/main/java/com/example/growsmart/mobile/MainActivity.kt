@@ -4,12 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.firebase.database.FirebaseDatabase
-import com.growsmart.mobile.SensorData
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 
 
 class MainActivity : ComponentActivity() {
@@ -30,7 +36,7 @@ fun SensorInputScreen() {
     var suhu by remember { mutableStateOf("") }
     var ph by remember { mutableStateOf("") }
     var tds by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("") }
+    var statusText by remember { mutableStateOf("") }
 
     val ref = FirebaseDatabase.getInstance().getReference("GrowSmart/SensorData")
 
@@ -45,52 +51,49 @@ fun SensorInputScreen() {
         OutlinedTextField(
             value = suhu,
             onValueChange = { suhu = it },
-            label = { Text("Suhu (°C)") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Suhu (°C)") }
         )
 
         OutlinedTextField(
             value = ph,
             onValueChange = { ph = it },
-            label = { Text("pH") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("pH") }
         )
 
         OutlinedTextField(
             value = tds,
             onValueChange = { tds = it },
-            label = { Text("TDS (ppm)") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("TDS (ppm)") }
         )
 
         Button(
             onClick = {
-                val data = SensorData(
-                    suhu = suhu.toDoubleOrNull() ?: 0.0,
-                    ph = ph.toDoubleOrNull() ?: 0.0,
-                    tds = tds.toDoubleOrNull() ?: 0.0
-                )
+                val data = mapOf("suhu" to suhu, "ph" to ph, "tds" to tds)
                 val timestamp = System.currentTimeMillis().toString()
                 ref.child(timestamp).setValue(data)
                     .addOnSuccessListener {
-                        status = "✅ Data berhasil dikirim ke Firebase"
+                        statusText = "Data berhasil dikirim ke Firebase"
                         suhu = ""
                         ph = ""
                         tds = ""
                     }
                     .addOnFailureListener {
-                        status = "❌ Gagal mengirim data"
+                        statusText = "Gagal mengirim data"
                     }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Kirim ke Firebase")
+            Text(text = "Kirim ke Firebase")
         }
 
-        if (status.isNotEmpty()) {
+        if (statusText.isNotEmpty()) {
             Text(
-                text = status,
-                color = if (status.startsWith("✅")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                text = statusText,
+                color = if (statusText.startsWith("Data berhasil"))
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
