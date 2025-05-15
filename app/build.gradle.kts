@@ -33,7 +33,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11" // Sesuai Compose 1.5.4 dan Kotlin 2.0
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 
     compileOptions {
@@ -47,7 +47,6 @@ android {
 }
 
 dependencies {
-    // AndroidX + Jetpack Compose
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -55,21 +54,16 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
 
-    // Firebase
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
 
-    // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 
-    // Material & AppCompat
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
 
-    // Unit Testing
     testImplementation("junit:junit:4.13.2")
 
-    // Instrumentation Testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
