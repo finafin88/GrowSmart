@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.growsmart.mobile"
+    namespace = "com.GrowSmart.mobile"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.growsmart.mobile"
+        applicationId = "com.GrowSmart.mobile"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "515495233346",
+    "firebase_url": "https://growsmart-fb5d8-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "growsmart-fb5d8",
+    "storage_bucket": "growsmart-fb5d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515495233346:android:3dba786d57fbd2dd2b2adb",
+        "android_client_info": {
+          "package_name": "com.GrowSmart.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVgYd2Q8MFSUzEoqlizXtpp0MAYSO1B-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
