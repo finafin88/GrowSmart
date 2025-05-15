@@ -2,8 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
-
+    id("org.jetbrains.compose") version "1.5.10"
 }
 
 android {
@@ -42,11 +41,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
-    }
-
-
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += "-P"
@@ -69,6 +63,8 @@ dependencies {
     // Debug
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
+    // Material & AppCompat
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
 }
