@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     id("com.google.gms.google-services")
-    id("org.jetbrains.compose") version "1.5.10"
 }
 
 android {
@@ -33,7 +33,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.11" // Sesuai Compose 1.5.4 dan Kotlin 2.0
     }
 
     compileOptions {
@@ -43,8 +43,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-        freeCompilerArgs += "-P"
-        freeCompilerArgs += "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
     }
 }
 
@@ -60,7 +58,7 @@ dependencies {
     // Firebase
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
 
-    // Debug
+    // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 
@@ -68,10 +66,10 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
 
-    // ✅ Unit Testing
+    // Unit Testing
     testImplementation("junit:junit:4.13.2")
 
-    // ✅ Instrumentation Testing
+    // Instrumentation Testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
