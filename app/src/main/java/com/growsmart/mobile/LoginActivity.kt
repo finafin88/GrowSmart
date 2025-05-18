@@ -28,8 +28,8 @@ class LoginActivity : AppCompatActivity() {
                 val password = passwordEditText.text.toString().trim()
 
                 if (email == "admin@gmail.com" && password == "123456") {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    val loginIntent = Intent(this, MainActivity::class.java)
+                    startActivity(loginIntent)
                     finish()
                 } else {
                     Toast.makeText(this, "Email atau password salah", Toast.LENGTH_SHORT).show()
