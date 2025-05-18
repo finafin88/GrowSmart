@@ -4,5 +4,8 @@
     <string name="password">Password</string>
     <string name="daftar">Daftar</string>
     <string name="sudah_punya_akun">Sudah punya akun? Login</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="login">Login</string>
+    <string name="belum_punya_akun">Belum punya akun? Daftar di sini</string>
 
 </resources>
