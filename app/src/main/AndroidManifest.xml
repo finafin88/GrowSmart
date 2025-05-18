@@ -22,6 +22,9 @@
 
         <activity android:name="com.growsmart.mobile.MainActivity" />
 
+        <activity android:name="com.growsmart.mobile.RegisterActivity" />
+
+
     </application>
 
 </manifest>
