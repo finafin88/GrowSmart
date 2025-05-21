@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.widget.Toolbar
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -21,36 +23,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = findViewById(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.nav_view)
 
-        // Toggle drawer (hamburger icon)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         navView.setNavigationItemSelectedListener(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-                Toast.makeText(this, "Home diklik", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Beranda diklik", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_suhu -> {
-                val intent = Intent(this, SuhuActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, SuhuActivity::class.java))
             }
-            // Tambahkan menu lain di sini kalau perlu
+            R.id.nav_ph -> {
+                startActivity(Intent(this, PhActivity::class.java))
+            }
+            R.id.nav_nutrisi -> {
+                startActivity(Intent(this, NutrisiActivity::class.java))
+            }
         }
-
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
