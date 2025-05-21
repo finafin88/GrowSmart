@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Halo GrowSmart!"
+            android:text="@string/halo_growsmart"
             android:padding="24dp"
             android:textSize="20sp"/>
     </LinearLayout>

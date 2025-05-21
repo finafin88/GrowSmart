@@ -9,5 +9,10 @@
     <string name="belum_punya_akun">Belum punya akun? Daftar di sini</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_suhu">Suhu</string>
+    <string name="nav_ph">pH</string>
+    <string name="nav_nutrisi">Nutrisi</string>
+    <string name="halo_growsmart">Halo GrowSmart!</string>
 
 </resources>
