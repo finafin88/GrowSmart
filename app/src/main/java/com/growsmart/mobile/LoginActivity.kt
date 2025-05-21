@@ -26,42 +26,32 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
         val loginButton = findViewById<Button>(R.id.loginButton)
         val registerTextView = findViewById<TextView>(R.id.registerTextView)
+        
+        loginButton.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Email dan password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Login gagal: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+        }
+
         registerTextView.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-
-            loginButton.setOnClickListener {
-                val email = emailEditText.text.toString().trim()
-                val password = passwordEditText.text.toString().trim()
-
-                if (email == "admin@gmail.com" && password == "123456") {
-                    val loginIntent = Intent(this, MainActivity::class.java)
-                    startActivity(loginIntent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Email atau password salah", Toast.LENGTH_SHORT).show()
-
-                }
-
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, MainActivity::class.java))
-                            finish()
-                        } else {
-                            Toast.makeText(this, "Login gagal: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                val registerTextView = findViewById<TextView>(R.id.registerTextView)
-                registerTextView.setOnClickListener {
-                    val intent = Intent(this, RegisterActivity::class.java)
-                    startActivity(intent)
-                }
-
-            }
-            }
         }
+    }
 }
 
