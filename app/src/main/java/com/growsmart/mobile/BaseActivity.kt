@@ -12,7 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 
 
-open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
@@ -20,6 +20,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_drawer)
+        navView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener(this)
+
+
+        val contentLayout = findViewById<FrameLayout>(R.id.content_frame)
+        layoutInflater.inflate(getLayoutResourceId(), contentLayout, true)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
@@ -28,17 +34,17 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         setSupportActionBar(toolbar)
 
         val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
+            this, drawerLayout, toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
     }
+    abstract fun getLayoutResourceId(): Int
 
     fun setToolbarTitle(title: String) {
         supportActionBar?.title = title

@@ -3,13 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:paddingTop="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="0dp">
 
-    <TextView
+
+<TextView
         android:id="@+id/textNutrisi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Data nutrisi belum tersedia"
         android:textSize="20sp" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/nutrisiChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kontrol Manual Nutrisi"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnNutrisiA"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Tambah A" />
+
+        <Button
+            android:id="@+id/btnNutrisiB"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Tambah B" />
+    </LinearLayout>
+
 </LinearLayout>
