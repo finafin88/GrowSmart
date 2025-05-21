@@ -1,98 +1,63 @@
 package com.growsmart.mobile
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.google.firebase.database.FirebaseDatabase
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import com.google.android.material.navigation.NavigationView
+import androidx.drawerlayout.widget.DrawerLayout
 
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-class MainActivity : ComponentActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    SensorInputScreen()
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+
+        // Toggle drawer (hamburger icon)
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener(this)
     }
-}
 
-@Composable
-fun SensorInputScreen() {
-    var suhu by remember { mutableStateOf("") }
-    var ph by remember { mutableStateOf("") }
-    var tds by remember { mutableStateOf("") }
-    var statusText by remember { mutableStateOf("") }
-
-    val ref = FirebaseDatabase.getInstance().getReference("GrowSmart/SensorData")
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(text = "Input Data Sensor", style = MaterialTheme.typography.titleLarge)
-
-        OutlinedTextField(
-            value = suhu,
-            onValueChange = { suhu = it },
-            label = { Text("Suhu (°C)") }
-        )
-
-        OutlinedTextField(
-            value = ph,
-            onValueChange = { ph = it },
-            label = { Text("pH") }
-        )
-
-        OutlinedTextField(
-            value = tds,
-            onValueChange = { tds = it },
-            label = { Text("TDS (ppm)") }
-        )
-
-        Button(
-            onClick = {
-                val data = mapOf("suhu" to suhu, "ph" to ph, "tds" to tds)
-                val timestamp = System.currentTimeMillis().toString()
-                ref.child(timestamp).setValue(data)
-                    .addOnSuccessListener {
-                        statusText = "Data berhasil dikirim ke Firebase"
-                        suhu = ""
-                        ph = ""
-                        tds = ""
-                    }
-                    .addOnFailureListener {
-                        statusText = "Gagal mengirim data"
-                    }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Kirim ke Firebase")
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_home -> {
+                Toast.makeText(this, "Home diklik", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_suhu -> {
+                val intent = Intent(this, SuhuActivity::class.java)
+                startActivity(intent)
+            }
+            // Tambahkan menu lain di sini kalau perlu
         }
 
-        if (statusText.isNotEmpty()) {
-            Text(
-                text = statusText,
-                color = if (statusText.startsWith("Data berhasil"))
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(8.dp)
-            )
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
         }
     }
 }

@@ -20,10 +20,24 @@
         </activity>
 
 
-        <activity android:name="com.growsmart.mobile.MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+
 
         <activity android:name="com.growsmart.mobile.RegisterActivity" />
 
+        <activity
+            android:name=".SuhuActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".NutrisiActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".PhActivity"
+            android:exported="true"/>
 
     </application>
 
