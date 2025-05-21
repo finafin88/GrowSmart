@@ -1,11 +1,11 @@
 package com.growsmart.mobile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 
-class SuhuActivity : AppCompatActivity() {
+class SuhuActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_suhu)
+        setContentLayout(R.layout.activity_main)
+        setToolbarTitle("Suhu")
     }
 }

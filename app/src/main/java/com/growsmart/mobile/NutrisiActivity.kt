@@ -1,11 +1,12 @@
 package com.growsmart.mobile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 
-class NutrisiActivity : AppCompatActivity() {
+class NutrisiActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_nutrisi)
+        setContentLayout(R.layout.activity_main)
+        setToolbarTitle("Nutrisi")
+
     }
 }
