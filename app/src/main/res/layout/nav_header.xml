@@ -8,10 +8,14 @@
     android:background="@color/purple_700">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher_round"
-        android:contentDescription="Profile" />
+        android:src="@drawable/growsmart_logo"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="fitCenter"/>
+
 
     <TextView
         android:layout_width="wrap_content"
