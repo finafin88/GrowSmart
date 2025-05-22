@@ -19,4 +19,5 @@
         android:id="@+id/nav_nutrisi"
         android:title="@string/nav_nutrisi"
         android:icon="@android:drawable/ic_menu_agenda" />
+
 </menu>

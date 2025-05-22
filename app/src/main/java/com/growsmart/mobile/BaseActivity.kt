@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
+import com.google.firebase.auth.FirebaseAuth
 
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -22,7 +24,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         setContentView(R.layout.activity_base_drawer)
         navView = findViewById(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
-
 
         val contentLayout = findViewById<FrameLayout>(R.id.content_frame)
         layoutInflater.inflate(getLayoutResourceId(), contentLayout, true)
@@ -44,6 +45,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
         navView.setNavigationItemSelectedListener(this)
     }
+
     abstract fun getLayoutResourceId(): Int
 
     fun setToolbarTitle(title: String) {
@@ -63,23 +65,23 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
             }
+
             R.id.nav_suhu -> startActivity(Intent(this, SuhuActivity::class.java))
             R.id.nav_ph -> startActivity(Intent(this, PhActivity::class.java))
             R.id.nav_nutrisi -> startActivity(Intent(this, NutrisiActivity::class.java))
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START)
-        return true
-    }
-    override
-    fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+                return true
         }
-    }
+        override
+        fun onBackPressed() {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                super.onBackPressed()
+            }
+        }
 }
-
 
 
