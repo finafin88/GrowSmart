@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -12,6 +11,9 @@ import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.firebase.auth.FirebaseAuth
+import android.view.Menu
+import androidx.appcompat.app.AlertDialog
+
 
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -19,9 +21,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_drawer)
+
         navView = findViewById(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
 
@@ -44,6 +47,29 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                // ⬇️ Tambahkan dialog konfirmasi di sini:
+                AlertDialog.Builder(this)
+                    .setTitle("Konfirmasi Logout")
+                    .setMessage("Apakah Anda yakin ingin logout?")
+                    .setPositiveButton("Ya") { dialog, _ ->
+                        FirebaseAuth.getInstance().signOut()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Tidak") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     abstract fun getLayoutResourceId(): Int
@@ -82,6 +108,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 super.onBackPressed()
             }
         }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 }
 
 

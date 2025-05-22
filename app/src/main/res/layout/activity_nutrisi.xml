@@ -40,18 +40,15 @@
         android:weightSum="2">
 
         <Button
-            android:id="@+id/btnNutrisiA"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/btnNutrisiAB"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tambah A" />
-
-        <Button
-            android:id="@+id/btnNutrisiB"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Tambah B" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Nyalakan Nutrisi AB"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_button_nutrisi" />
     </LinearLayout>
 
 </LinearLayout>

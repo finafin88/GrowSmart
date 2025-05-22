@@ -3,11 +3,15 @@ package com.growsmart.mobile
 import android.os.Bundle
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.FirebaseDatabase
 import android.widget.Button
 import android.widget.Toast
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import android.graphics.Color
 
 
 class NutrisiActivity : BaseActivity() {
@@ -42,23 +46,40 @@ class NutrisiActivity : BaseActivity() {
             Entry(2f, 900f),
             Entry(3f, 870f)
         )
+        val dataSet = LineDataSet(dummyTds, "Nutrisi AB (ppm)").apply {
+            color = Color.BLUE
+            valueTextColor = Color.BLACK
+            lineWidth = 2f
+            circleRadius = 4f
+            setCircleColor(Color.BLUE)
+            setDrawValues(true)
+        }
 
-        val dataSet = LineDataSet(dummyTds, "TDS (ppm)")
         val lineData = LineData(dataSet)
         nutrisiChart.data = lineData
+        nutrisiChart.description.text = "Grafik Nutrisi AB"
         nutrisiChart.invalidate()
-        val btnNutrisiA = findViewById<Button>(R.id.btnNutrisiA)
-        val btnNutrisiB = findViewById<Button>(R.id.btnNutrisiB)
 
-        btnNutrisiA.setOnClickListener {
-            kirimPerintahNutrisi("nutrisi_a")
-        }
 
-        btnNutrisiB.setOnClickListener {
-            kirimPerintahNutrisi("nutrisi_b")
-        }
+        val btnNutrisiAB = findViewById<Button>(R.id.btnNutrisiAB)
+        val refNutrisiAB = FirebaseDatabase.getInstance().getReference("manual/nutrisi_ab")
 
+        refNutrisiAB.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val isOn = snapshot.getValue(Boolean::class.java) ?: false
+                btnNutrisiAB.text = if (isOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+        btnNutrisiAB.setOnClickListener {
+            refNutrisiAB.get().addOnSuccessListener { snapshot ->
+                val currentState = snapshot.getValue(Boolean::class.java) ?: false
+                refNutrisiAB.setValue(!currentState)
+            }
         }
+    }
 
     }
 
