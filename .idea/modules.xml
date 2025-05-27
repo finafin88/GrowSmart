@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AndroidStudioProjects.GrowSmart.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AndroidStudioProjects.GrowSmart.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/GrowSmart.iml" filepath="$PROJECT_DIR$/.idea/GrowSmart.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GrowSmart.app.unitTest.iml" />
