@@ -23,12 +23,12 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        applyThemeFromPreferences() // apply sebelum super
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_drawer)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
+        navView.setNavigationItemSelectedListener(this)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
