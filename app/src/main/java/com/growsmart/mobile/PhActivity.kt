@@ -25,40 +25,59 @@ class PhActivity : BaseActivity() {
             }
     }
 
-
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_ph
     }
+    private var isPhUpOn = false
+    private var isPhDownOn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setToolbarTitle("Grafik pH")
 
-        phChart = findViewById(R.id.phChart)
+        val phChart = findViewById<LineChart>(R.id.phChart)
+        val btnPhUp = findViewById<Button>(R.id.btnPhUp)
+        val btnPhDown = findViewById<Button>(R.id.btnPhDown)
 
-        // Dummy data ph ganti ke firebase
-        val dummyEntries = listOf(
+    val dummyEntries = listOf(
             Entry(0f, 6.5f),
             Entry(1f, 6.8f),
             Entry(2f, 7.0f),
             Entry(3f, 6.9f)
         )
-
-        val dataSet = LineDataSet(dummyEntries, "Dummy pH")
-        val lineData = LineData(dataSet)
-        phChart.data = lineData
+        val dataSet = LineDataSet(dummyEntries, "pH Air")
+        phChart.data = LineData(dataSet)
         phChart.invalidate()
-        val btnPhUp = findViewById<Button>(R.id.btnPhUp)
-        val btnPhDown = findViewById<Button>(R.id.btnPhDown)
+
+        updatePhUpButton(btnPhUp)
+        updatePhDownButton(btnPhDown)
 
         btnPhUp.setOnClickListener {
-            kirimPerintahPH("ph_up")
+            isPhUpOn = !isPhUpOn
+            updatePhUpButton(btnPhUp)
         }
-
         btnPhDown.setOnClickListener {
-            kirimPerintahPH("ph_down")
+            isPhDownOn = !isPhDownOn
+            updatePhDownButton(btnPhDown)
         }
     }
-
+    private fun updatePhUpButton(button: Button) {
+        if (isPhUpOn) {
+            button.text = "PH Up ON"
+            button.setBackgroundResource(R.drawable.bg_button_on)
+        } else {
+            button.text = "PH Up OFF"
+            button.setBackgroundResource(R.drawable.bg_button_off)
+        }
+    }
+    private fun updatePhDownButton(button: Button) {
+        if (isPhDownOn) {
+            button.text = "PH Down ON"
+            button.setBackgroundResource(R.drawable.bg_button_on)
+        } else {
+            button.text = "PH Down OFF"
+            button.setBackgroundResource(R.drawable.bg_button_off)
+        }
+    }
 }
 

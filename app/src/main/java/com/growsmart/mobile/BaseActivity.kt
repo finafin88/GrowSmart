@@ -1,20 +1,21 @@
 package com.growsmart.mobile
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.widget.FrameLayout
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.firebase.auth.FirebaseAuth
-import android.view.Menu
-import androidx.appcompat.app.AlertDialog
-
-
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,14 +23,9 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     lateinit var navView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPreferences() // apply sebelum super
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_drawer)
-
-        navView = findViewById(R.id.nav_view)
-        navView.setNavigationItemSelectedListener(this)
-
-        val contentLayout = findViewById<FrameLayout>(R.id.content_frame)
-        layoutInflater.inflate(getLayoutResourceId(), contentLayout, true)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
@@ -37,22 +33,53 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val toggle = ActionBarDrawerToggle(
+        val toggle = androidx.appcompat.app.ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
-
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navView.setNavigationItemSelectedListener(this)
+        val contentLayout = findViewById<FrameLayout>(R.id.content_frame)
+        layoutInflater.inflate(getLayoutResourceId(), contentLayout, true)
+    }
+
+    private fun applyThemeFromPreferences() {
+        val pref = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        when (pref.getString("theme_mode", "system")) {
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_home -> startActivity(Intent(this, MainActivity::class.java))
+            R.id.nav_suhu -> startActivity(Intent(this, SuhuActivity::class.java))
+            R.id.nav_ph -> startActivity(Intent(this, PhActivity::class.java))
+            R.id.nav_nutrisi -> startActivity(Intent(this, NutrisiActivity::class.java))
+        }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
-                // ⬇️ Tambahkan dialog konfirmasi di sini:
                 AlertDialog.Builder(this)
                     .setTitle("Konfirmasi Logout")
                     .setMessage("Apakah Anda yakin ingin logout?")
@@ -63,9 +90,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                         startActivity(intent)
                         dialog.dismiss()
                     }
-                    .setNegativeButton("Tidak") { dialog, _ ->
-                        dialog.dismiss()
-                    }
+                    .setNegativeButton("Tidak") { dialog, _ -> dialog.dismiss() }
                     .show()
                 true
             }
@@ -78,41 +103,4 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     fun setToolbarTitle(title: String) {
         supportActionBar?.title = title
     }
-
-
-    fun setContentLayout(layoutResID: Int) {
-        val frameLayout = findViewById<FrameLayout>(R.id.content_frame)
-        layoutInflater.inflate(layoutResID, frameLayout, true)
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_home -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-            }
-
-            R.id.nav_suhu -> startActivity(Intent(this, SuhuActivity::class.java))
-            R.id.nav_ph -> startActivity(Intent(this, PhActivity::class.java))
-            R.id.nav_nutrisi -> startActivity(Intent(this, NutrisiActivity::class.java))
-        }
-
-            drawerLayout.closeDrawer(GravityCompat.START)
-                return true
-        }
-        override
-        fun onBackPressed() {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
-            } else {
-                super.onBackPressed()
-            }
-        }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
 }
-
-
