@@ -49,24 +49,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        android:weightSum="2">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <Button
             android:id="@+id/btnPhUp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="pH Up" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="PH Up"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_button_nutrisi" />
 
         <Button
             android:id="@+id/btnPhDown"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="pH Down" />
+            android:layout_marginBottom="16dp"
+            android:text="PH Down"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_button_nutrisi" />
     </LinearLayout>
+
 
 </LinearLayout>
