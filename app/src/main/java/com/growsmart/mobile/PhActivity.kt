@@ -1,12 +1,15 @@
 package com.growsmart.mobile
 
 import android.os.Bundle
+import android.view.Gravity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.firebase.database.FirebaseDatabase
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 
 
@@ -55,12 +58,17 @@ class PhActivity : BaseActivity() {
         btnPhUp.setOnClickListener {
             isPhUpOn = !isPhUpOn
             updatePhUpButton(btnPhUp)
+            showToastPh(isPhUpOn, true)
         }
+
         btnPhDown.setOnClickListener {
             isPhDownOn = !isPhDownOn
             updatePhDownButton(btnPhDown)
+            showToastPh(isPhDownOn, false)
         }
+
     }
+
     private fun updatePhUpButton(button: Button) {
         if (isPhUpOn) {
             button.text = "PH Up ON"
@@ -79,5 +87,27 @@ class PhActivity : BaseActivity() {
             button.setBackgroundResource(R.drawable.bg_button_off)
         }
     }
+
+    private fun showToastPh(aktif: Boolean, isPhUp: Boolean) {
+        val layout = layoutInflater.inflate(R.layout.toast_status, null)
+
+        val icon = layout.findViewById<ImageView>(R.id.toast_icon)
+        val text = layout.findViewById<TextView>(R.id.toast_text)
+
+        if (aktif) {
+            icon.setImageResource(R.drawable.ic_check_circle)
+            text.text = if (isPhUp) "PH Up berhasil DINYALAKAN" else "PH Down berhasil DINYALAKAN"
+        } else {
+            icon.setImageResource(R.drawable.ic_error)
+            text.text = if (isPhUp) "PH Up berhasil DIMATIKAN" else "PH Down berhasil DIMATIKAN"
+        }
+
+        val toast = Toast(applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+        toast.show()
+    }
+
 }
 

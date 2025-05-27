@@ -12,6 +12,9 @@ import android.widget.Toast
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import android.graphics.Color
+import android.view.Gravity
+import android.widget.ImageView
+import android.widget.TextView
 
 
 class NutrisiActivity : BaseActivity() {
@@ -77,9 +80,31 @@ class NutrisiActivity : BaseActivity() {
             refNutrisiAB.get().addOnSuccessListener { snapshot ->
                 val currentState = snapshot.getValue(Boolean::class.java) ?: false
                 refNutrisiAB.setValue(!currentState)
+                showToastNutirisi(!currentState)
             }
         }
-    }
 
     }
+    private fun showToastNutirisi(nyala: Boolean) {
+        val layout = layoutInflater.inflate(R.layout.toast_status, findViewById(android.R.id.content), false)
+
+        val icon = layout.findViewById<ImageView>(R.id.toast_icon)
+        val text = layout.findViewById<TextView>(R.id.toast_text)
+
+        if (nyala) {
+            icon.setImageResource(R.drawable.ic_check_circle)
+            text.text = "Nutrisi AB berhasil DINYALAKAN"
+        } else {
+            icon.setImageResource(R.drawable.ic_error)
+            text.text = "Nutrisi AB berhasil DIMATIKAN"
+        }
+
+        val toast = Toast(applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+        toast.show()
+    }
+
+}
 

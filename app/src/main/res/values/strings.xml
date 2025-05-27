@@ -14,5 +14,5 @@
     <string name="nav_ph">pH</string>
     <string name="nav_nutrisi">Nutrisi</string>
     <string name="halo_growsmart">Halo GrowSmart!</string>
-
+    <string name="toast_icon_desc">Status Icon</string>
 </resources>
