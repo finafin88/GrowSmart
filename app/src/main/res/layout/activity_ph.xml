@@ -9,11 +9,27 @@
     android:paddingBottom="0dp">
 
     <TextView
-        android:id="@+id/textPh"
+        android:id="@+id/txtPhValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pH Sekarang: -"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/txtPhKosong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Data pH belum tersedia"
-        android:textSize="20sp" />
+        android:textColor="#888888"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+
+
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/phChart"

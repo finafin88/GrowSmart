@@ -12,22 +12,23 @@ import android.widget.Toast
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import android.graphics.Color
+import com.google.firebase.database.DatabaseReference
+import android.widget.TextView
+
 
 
 class NutrisiActivity : BaseActivity() {
 
     private lateinit var nutrisiChart: LineChart
+    private lateinit var btnNutrisiAB: Button
 
-    private fun kirimPerintahNutrisi(perintah: String) {
-        val database = FirebaseDatabase.getInstance().reference
-        database.child("kontrol_manual").setValue(perintah)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Perintah dikirim: $perintah", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Gagal kirim perintah", Toast.LENGTH_SHORT).show()
-            }
-    }
+    private lateinit var database: FirebaseDatabase
+    private lateinit var tdsRef: DatabaseReference
+    private lateinit var controlRef: DatabaseReference
+    private lateinit var txtNutrisiValue: TextView
+
+    private val tdsEntries = ArrayList<Entry>()
+    private var indexCounter = 0f
 
     override fun getLayoutResourceId(): Int {
         return R.layout.activity_nutrisi
@@ -35,24 +36,22 @@ class NutrisiActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setToolbarTitle("Nutrisi")
+        setToolbarTitle("Nutrisi AB")
 
         nutrisiChart = findViewById(R.id.nutrisiChart)
+        btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
-        // Dummy data nutrisi ganti ke firebase
-        val dummyTds = listOf(
-            Entry(0f, 700f),
-            Entry(1f, 800f),
-            Entry(2f, 900f),
-            Entry(3f, 870f)
-        )
-        val dataSet = LineDataSet(dummyTds, "Nutrisi AB (ppm)").apply {
+        database = FirebaseDatabase.getInstance()
+        tdsRef = database.getReference("sensor/tds")
+        controlRef = database.getReference("manual/nutrisi_ab")
+
+        val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
             color = Color.BLUE
             valueTextColor = Color.BLACK
             lineWidth = 2f
             circleRadius = 4f
             setCircleColor(Color.BLUE)
-            setDrawValues(true)
+            setDrawValues(false)
         }
 
         val lineData = LineData(dataSet)
@@ -60,26 +59,30 @@ class NutrisiActivity : BaseActivity() {
         nutrisiChart.description.text = "Grafik Nutrisi AB"
         nutrisiChart.invalidate()
 
+        txtNutrisiValue = findViewById(R.id.txtNutrisiValue)
 
-        val btnNutrisiAB = findViewById<Button>(R.id.btnNutrisiAB)
-        val refNutrisiAB = FirebaseDatabase.getInstance().getReference("manual/nutrisi_ab")
-
-        refNutrisiAB.addValueEventListener(object : ValueEventListener {
+        tdsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val isOn = snapshot.getValue(Boolean::class.java) ?: false
-                btnNutrisiAB.text = if (isOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
+                val tdsString = snapshot.getValue(String::class.java)
+                val tdsValue = tdsString?.toFloatOrNull()
+
+                if (tdsValue != null) {
+                    txtNutrisiValue.text = "Nutrisi: %.1f ppm".format(tdsValue)
+
+                    val entry = Entry(indexCounter, tdsValue)
+                    lineData.addEntry(entry, 0)
+                    indexCounter++
+
+                    lineData.notifyDataChanged()
+                    nutrisiChart.notifyDataSetChanged()
+                    nutrisiChart.invalidate()
+                }
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@NutrisiActivity, "Gagal baca data TDS", Toast.LENGTH_SHORT)
+                    .show()
+            }
         })
-
-        btnNutrisiAB.setOnClickListener {
-            refNutrisiAB.get().addOnSuccessListener { snapshot ->
-                val currentState = snapshot.getValue(Boolean::class.java) ?: false
-                refNutrisiAB.setValue(!currentState)
-            }
-        }
     }
-
-    }
-
+}

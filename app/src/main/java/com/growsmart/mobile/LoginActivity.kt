@@ -2,6 +2,7 @@ package com.growsmart.mobile
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -9,12 +10,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
-
-
-
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var loginButton: Button
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var registerTextView: TextView
+
+    private val TAG = "LOGIN"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +26,12 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val emailEditText = findViewById<EditText>(R.id.emailEditText)
-        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-        val loginButton = findViewById<Button>(R.id.loginButton)
-        val registerTextView = findViewById<TextView>(R.id.registerTextView)
-        
+        // Inisialisasi view
+        emailEditText = findViewById(R.id.emailEditText)
+        passwordEditText = findViewById(R.id.passwordEditText)
+        loginButton = findViewById(R.id.loginButton)
+        registerTextView = findViewById(R.id.registerTextView)
+
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -40,10 +45,12 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, "Login berhasil, menuju MainActivity")
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
                         Toast.makeText(this, "Login gagal: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "Login gagal", task.exception)
                     }
                 }
         }
@@ -54,4 +61,3 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 }
-
