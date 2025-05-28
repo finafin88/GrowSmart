@@ -1,0 +1,60 @@
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/main
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{1}: rebase (start): checkout origin/main
+[33md51cddb[m HEAD@{2}: reset: moving to d51cddb
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{3}: merge origin/main: Fast-forward
+[33md51cddb[m HEAD@{4}: reset: moving to d51cddb
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{5}: pull --no-stat -v --progress origin main: Fast-forward
+[33md51cddb[m HEAD@{6}: reset: moving to d51cddb
+[33m76e5147[m HEAD@{7}: reset: moving to 76e5147
+[33md51cddb[m HEAD@{8}: reset: moving to d51cddb
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{9}: pull --no-stat -v --progress origin main: Fast-forward
+[33md51cddb[m HEAD@{10}: commit: ph
+[33m76e5147[m HEAD@{11}: commit: main
+[33mf3bc289[m HEAD@{12}: commit: grafik
+[33m92fc3d8[m HEAD@{13}: commit: grafik
+[33m3c6a6f1[m HEAD@{14}: commit: grafik
+[33m8041be4[m HEAD@{15}: commit: grafik
+[33m040a699[m HEAD@{16}: commit: grafik
+[33m020872c[m HEAD@{17}: commit: grafik
+[33me96189e[m HEAD@{18}: commit: xml
+[33m54a054f[m HEAD@{19}: commit: xml
+[33mb2dc9a4[m HEAD@{20}: commit: xml
+[33m29aa570[m HEAD@{21}: commit: xml
+[33m2e74828[m HEAD@{22}: commit: side bar
+[33md79856e[m HEAD@{23}: commit: Add Nutrisi, pH, and Suhu layout and activity
+[33m4ef6ea6[m HEAD@{24}: merge origin/main: Merge made by the 'ort' strategy.
+[33m2b498c4[m HEAD@{25}: commit: buat resgister
+[33m9697007[m HEAD@{26}: pull --no-stat -v --progress origin main: Fast-forward
+[33m891b6a3[m HEAD@{27}: commit: buat resgister
+[33mc530487[m HEAD@{28}: commit: buat resgister
+[33m797d20f[m HEAD@{29}: commit: buat resgister
+[33m44671dc[m HEAD@{30}: commit: buat resgister
+[33m4e8a045[m HEAD@{31}: commit: buat resgister
+[33m8800729[m HEAD@{32}: commit: setting gradle app,login activity
+[33m88d7bb1[m HEAD@{33}: rebase (finish): returning to refs/heads/main
+[33m88d7bb1[m HEAD@{34}: rebase (continue): p
+[33m539bc7d[m HEAD@{35}: rebase (start): checkout origin/main
+[33mbb5b40e[m HEAD@{36}: reset: moving to HEAD
+[33mbb5b40e[m HEAD@{37}: commit: KONNTOL
+[33m26da8a5[m HEAD@{38}: pull --no-stat -v --progress origin main: Fast-forward
+[33m51af457[m HEAD@{39}: pull: Fast-forward
+[33m96ca032[m HEAD@{40}: checkout: moving from main to main
+[33m96ca032[m HEAD@{41}: checkout: moving from main to main
+[33m96ca032[m HEAD@{42}: commit (merge): Merge branch 'main' of https://github.com/finafin88/GrowSmart
+[33md63f6e8[m HEAD@{43}: rebase (finish): returning to refs/heads/main
+[33md63f6e8[m HEAD@{44}: rebase (continue): Simpan perubahan lokal sebelum pull
+[33medf6161[m HEAD@{45}: pull --rebase origin main (start): checkout edf61614e3d41af44042b205ee885ff8a5bfda57
+[33m70eb603[m HEAD@{46}: reset: moving to HEAD
+[33m70eb603[m HEAD@{47}: commit: Simpan perubahan lokal sebelum pull
+[33m6d1c68f[m HEAD@{48}: Branch: renamed refs/heads/main to refs/heads/main
+[33m6d1c68f[m HEAD@{50}: commit: Push seluruh project GrowSmart pertama kali
+[33m9e62e6c[m HEAD@{51}: pull --no-stat -v --progress origin main: Fast-forward
+[33m9a6cd6c[m HEAD@{52}: commit: Update manifest, gradle, and source files
+[33m5561c5e[m HEAD@{53}: commit (merge): Merge remote-tracking branch 'origin/main'
+[33m48f31fc[m HEAD@{54}: commit (merge): Merge branch 'main' of https://github.com/finafin88/GrowSmart
+[33m476ac51[m HEAD@{55}: commit (merge): Selesaikan konflik di AndroidManifest.xml
+[33me6d314f[m HEAD@{56}: commit: Simpan perubahan gradle sebelum pull
+[33m631725c[m HEAD@{57}: commit: coba
+[33m7cc3cfa[m HEAD@{58}: commit: coba
+[33m74a90ee[m HEAD@{59}: commit (merge): Pesan commit kamu, misalnya: 'tambah fitur grafik suhu dari Firebase'
+[33m3973e86[m HEAD@{60}: commit (initial): add MainActivity

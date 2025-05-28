@@ -1,0 +1,65 @@
+[33m08f780e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Merge remote-tracking branch 'origin/main'
+[33mb2dfc24[m Kembalikan PhActivity, NutrisiActivity,SuhuActivity ke versi Haura
+[33md00d27d[m Kembalikan PhActivity ke versi Haura
+[33mf24f608[m Kembalikan PhActivity ke versi Haura
+[33me2dfd4c[m Merge branch 'main' of https://github.com/finafin88/GrowSmart
+[33m70902a0[m Perbaikan ph activity, suhu dan nutrisi
+[33md51cddb[m ph
+[33m76e5147[m main
+[33mf3bc289[m grafik
+[33m92fc3d8[m grafik
+[33m3c6a6f1[m grafik
+[33m8041be4[m grafik
+[33m040a699[m grafik
+[33m020872c[m grafik
+[33me96189e[m xml
+[33m54a054f[m xml
+[33mb2dc9a4[m xml
+[33m29aa570[m xml
+[33m2e74828[m side bar
+[33md79856e[m Add Nutrisi, pH, and Suhu layout and activity
+[33m4ef6ea6[m Merge remote-tracking branch 'origin/main'
+[33m2b498c4[m buat resgister
+[33m58dda3a[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m9697007[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33md413c15[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m891b6a3[m buat resgister
+[33mc530487[m buat resgister
+[33m797d20f[m buat resgister
+[33m44671dc[m buat resgister
+[33m4e8a045[m buat resgister
+[33m8800729[m setting gradle app,login activity
+[33m88d7bb1[m p
+[33m539bc7d[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m82adab7[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m26da8a5[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m51af457[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m2204068[m Merge remote-tracking branch 'origin/main'
+[33m6082f7d[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m96ca032[m Merge branch 'main' of https://github.com/finafin88/GrowSmart
+[33md63f6e8[m Simpan perubahan lokal sebelum pull
+[33m70eb603[m Simpan perubahan lokal sebelum pull
+[33medf6161[m Perbaikan konfigurasi Gradle dan penambahan JetBrains Compose repo
+[33m63ce75b[m Hapus folder GrowSmartBaru yang tidak digunakan
+[33m6d1c68f[m Push seluruh project GrowSmart pertama kali
+[33m9e62e6c[m Merge remote-tracking branch 'origin/main'
+[33m50c8530[m commit perubahan lokal
+[33m9a6cd6c[m Update manifest, gradle, and source files
+[33m5561c5e[m Merge remote-tracking branch 'origin/main'
+[33m2f59517[m Initial commit
+[33m2c49fcc[m update gradle dan mainActivity
+[33m7a38583[m update gradle dan mainActivity
+[33m420c066[m update gradle dan mainActivity
+[33m48f31fc[m Merge branch 'main' of https://github.com/finafin88/GrowSmart
+[33mbd88269[m update gradle dan mainActivity
+[33m476ac51[m Selesaikan konflik di AndroidManifest.xml
+[33me6d314f[m Simpan perubahan gradle sebelum pull
+[33mb4ed675[m Push semua file project GrowSmart
+[33m631725c[m coba
+[33m7cc3cfa[m coba
+[33m74a90ee[m Pesan commit kamu, misalnya: 'tambah fitur grafik suhu dari Firebase'
+[33m723d0df[m Add activity_main layout for main screen
+[33mdc4d2af[m Add missing src folder and layout files
+[33mbfc2332[m Add MainActivity and update gradle & manifest
+[33m3973e86[m add MainActivity
+[33m69f5287[m Initial commit
