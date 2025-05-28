@@ -11,86 +11,120 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 
 class PhActivity : BaseActivity() {
 
     private lateinit var phChart: LineChart
+    private lateinit var txtPhValue: TextView
+    private lateinit var btnPhUp: Button
+    private lateinit var btnPhDown: Button
 
-    private fun kirimPerintahPH(perintah: String) {
-        val database = FirebaseDatabase.getInstance().reference
-        database.child("kontrol_manual").setValue(perintah)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Perintah terkirim: $perintah", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Gagal kirim perintah", Toast.LENGTH_SHORT).show()
-            }
-    }
+    private lateinit var sensorRef: DatabaseReference
+    private lateinit var logPhRef: DatabaseReference
+    private lateinit var controlRef: DatabaseReference
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.activity_ph
-    }
     private var isPhUpOn = false
     private var isPhDownOn = false
+    private val phEntries = ArrayList<Entry>()
+
+    override fun getLayoutResourceId(): Int = R.layout.activity_ph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setToolbarTitle("Grafik pH")
 
-        val phChart = findViewById<LineChart>(R.id.phChart)
-        val btnPhUp = findViewById<Button>(R.id.btnPhUp)
-        val btnPhDown = findViewById<Button>(R.id.btnPhDown)
+        phChart = findViewById(R.id.phChart)
+        txtPhValue = findViewById(R.id.txtPhValue)
+        btnPhUp = findViewById(R.id.btnPhUp)
+        btnPhDown = findViewById(R.id.btnPhDown)
 
-    val dummyEntries = listOf(
-            Entry(0f, 6.5f),
-            Entry(1f, 6.8f),
-            Entry(2f, 7.0f),
-            Entry(3f, 6.9f)
-        )
-        val dataSet = LineDataSet(dummyEntries, "pH Air")
-        phChart.data = LineData(dataSet)
-        phChart.invalidate()
+        val database = FirebaseDatabase.getInstance()
+        sensorRef = database.getReference("sensor/ph")
+        logPhRef = database.getReference("GrowSmart/log/ph")
+        controlRef = database.getReference("GrowSmart/status/manual/ph")
 
-        updatePhUpButton(btnPhUp)
-        updatePhDownButton(btnPhDown)
+
+        sensorRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val value = snapshot.getValue<String>()
+                value?.let {
+                    txtPhValue.text = "$it"
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                txtPhValue.text = "Gagal ambil data"
+            }
+        })
+
+        logPhRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                phEntries.clear()
+                var index = 0f
+                for (data in snapshot.children) {
+                    val value = data.getValue<String>()?.toFloatOrNull()
+                    if (value != null) {
+                        phEntries.add(Entry(index++, value))
+                    }
+                }
+                val dataSet = LineDataSet(phEntries, "Log pH Air")
+                dataSet.lineWidth = 2f
+                dataSet.setDrawValues(false)
+                dataSet.setDrawCircles(true)
+
+                phChart.data = LineData(dataSet)
+                phChart.invalidate()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Gagal ambil grafik pH", Toast.LENGTH_SHORT).show()
+            }
+        })
+
 
         btnPhUp.setOnClickListener {
             isPhUpOn = !isPhUpOn
-            updatePhUpButton(btnPhUp)
+            updatePhUpButton()
             showToastPh(isPhUpOn, true)
+            controlRef.child("ph_up").setValue(isPhUpOn)
         }
 
+        
         btnPhDown.setOnClickListener {
             isPhDownOn = !isPhDownOn
-            updatePhDownButton(btnPhDown)
+            updatePhDownButton()
             showToastPh(isPhDownOn, false)
+            controlRef.child("ph_down").setValue(isPhDownOn)
         }
 
+        updatePhUpButton()
+        updatePhDownButton()
     }
 
-    private fun updatePhUpButton(button: Button) {
+    private fun updatePhUpButton() {
         if (isPhUpOn) {
-            button.text = "PH Up ON"
-            button.setBackgroundResource(R.drawable.bg_button_on)
+            btnPhUp.text = "PH Up ON"
+            btnPhUp.setBackgroundResource(R.drawable.bg_button_on)
         } else {
-            button.text = "PH Up OFF"
-            button.setBackgroundResource(R.drawable.bg_button_off)
+            btnPhUp.text = "PH Up OFF"
+            btnPhUp.setBackgroundResource(R.drawable.bg_button_off)
         }
     }
-    private fun updatePhDownButton(button: Button) {
+
+    private fun updatePhDownButton() {
         if (isPhDownOn) {
-            button.text = "PH Down ON"
-            button.setBackgroundResource(R.drawable.bg_button_on)
+            btnPhDown.text = "PH Down ON"
+            btnPhDown.setBackgroundResource(R.drawable.bg_button_on)
         } else {
-            button.text = "PH Down OFF"
-            button.setBackgroundResource(R.drawable.bg_button_off)
+            btnPhDown.text = "PH Down OFF"
+            btnPhDown.setBackgroundResource(R.drawable.bg_button_off)
         }
     }
 
     private fun showToastPh(aktif: Boolean, isPhUp: Boolean) {
         val layout = layoutInflater.inflate(R.layout.toast_status, null)
-
         val icon = layout.findViewById<ImageView>(R.id.toast_icon)
         val text = layout.findViewById<TextView>(R.id.toast_text)
 
@@ -108,6 +142,4 @@ class PhActivity : BaseActivity() {
         toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
         toast.show()
     }
-
 }
-

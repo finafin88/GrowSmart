@@ -16,6 +16,8 @@ import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.database.DatabaseReference
+import android.util.Log
+
 
 
 class NutrisiActivity : BaseActivity() {
@@ -27,6 +29,7 @@ class NutrisiActivity : BaseActivity() {
     private lateinit var refLogTds: DatabaseReference
     private lateinit var refNutrisiAB: DatabaseReference
 
+    private var isNutrisiOn: Boolean = false
     private val tdsEntries = ArrayList<Entry>()
     private var indexCounter = 0f
 
@@ -40,11 +43,10 @@ class NutrisiActivity : BaseActivity() {
         txtTdsValue = findViewById(R.id.txtTdsValue)
         btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
-
         refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/log/tds")
-        refNutrisiAB = FirebaseDatabase.getInstance().getReference("manual/nutrisi_ab")
+        refNutrisiAB = FirebaseDatabase.getInstance().getReference("GrowSmart/status/manual/nutrisi_ab")
 
-
+        // === AMBIL DATA GRAFIK TDS ===
         refLogTds.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 tdsEntries.clear()
@@ -83,37 +85,49 @@ class NutrisiActivity : BaseActivity() {
             }
         })
 
-
+        // === AMBIL STATUS MANUAL NUTRISI AB ===
         refNutrisiAB.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val isOn = snapshot.getValue(Boolean::class.java) ?: false
-                btnNutrisiAB.text = if (isOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
+                isNutrisiOn = snapshot.getValue(Boolean::class.java) ?: false
+                updateButtonText()
+                showToastNutrisi(isNutrisiOn)
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Gagal baca status nutrisi_ab: ${error.message}")
+            }
         })
 
-       
+        // === KIRIM PERINTAH KE FIREBASE ===
         btnNutrisiAB.setOnClickListener {
-            refNutrisiAB.get().addOnSuccessListener { snapshot ->
-                val currentState = snapshot.getValue(Boolean::class.java) ?: false
-                refNutrisiAB.setValue(!currentState)
-                showToastNutrisi(!currentState)
-            }
+            val newValue = !isNutrisiOn
+            refNutrisiAB.setValue(newValue)
+                .addOnSuccessListener {
+                    Log.d("Firebase", "Perintah nutrisi_ab dikirim: $newValue")
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Gagal mengirim perintah", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
+    // === UPDATE TEKS TOMBOL ===
+    private fun updateButtonText() {
+        btnNutrisiAB.text = if (isNutrisiOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
+    }
+
+    // === TAMPILKAN TOAST KUSTOM ===
     private fun showToastNutrisi(nyala: Boolean) {
         val layout = layoutInflater.inflate(R.layout.toast_status, findViewById(android.R.id.content), false)
         val icon = layout.findViewById<ImageView>(R.id.toast_icon)
-        val text = layout.findViewById<TextView>(R.id.toast_text)
+        val toastText = layout.findViewById<TextView>(R.id.toast_text)
 
         if (nyala) {
             icon.setImageResource(R.drawable.ic_check_circle)
-            text.text = "Nutrisi AB berhasil DINYALAKAN"
+            toastText.text = "Nutrisi AB berhasil DINYALAKAN"
         } else {
             icon.setImageResource(R.drawable.ic_error)
-            text.text = "Nutrisi AB berhasil DIMATIKAN"
+            toastText.text = "Nutrisi AB berhasil DIMATIKAN"
         }
 
         Toast(this).apply {
