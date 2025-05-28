@@ -30,9 +30,12 @@ class SuhuActivity : BaseActivity() {
         suhuChart = findViewById(R.id.suhuChart)
         txtSuhuValue = findViewById(R.id.txtSuhuValue)
 
-        val rootRef = FirebaseDatabase.getInstance().getReference("GrowSmart")
-        currentSuhuRef = rootRef.child("sensor/suhu")
-        logSuhuRef = rootRef.child("log/suhu")
+        val database = FirebaseDatabase.getInstance()
+        currentSuhuRef = database.getReference("sensor/suhu")
+        logSuhuRef = database.getReference("GrowSmart/log/suhu")
+
+
+
 
         bacaSuhuSekarang()
         tampilkanGrafikSuhu()
