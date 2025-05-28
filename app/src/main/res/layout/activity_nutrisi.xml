@@ -9,15 +9,15 @@
     android:paddingBottom="0dp">
 
 
-<TextView
-     android:id="@+id/txtNutrisiValue"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:text="Nutrisi: - ppm"
-     android:textSize="18sp"
-     android:textStyle="bold"
-     android:textColor="#000000"
-     android:layout_marginBottom="8dp" />
+    <TextView
+        android:id="@+id/txtTdsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- ppm"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp" />
+
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/nutrisiChart"

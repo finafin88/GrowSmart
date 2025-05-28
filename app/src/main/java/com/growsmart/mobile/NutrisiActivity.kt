@@ -21,13 +21,13 @@ import com.google.firebase.database.DatabaseReference
 class NutrisiActivity : BaseActivity() {
 
     private lateinit var nutrisiChart: LineChart
-    private lateinit var txtNutrisiValue: TextView
+    private lateinit var txtTdsValue: TextView
     private lateinit var btnNutrisiAB: Button
 
-    private lateinit var refLogNutrisi: DatabaseReference
-    private lateinit var refKontrolNutrisi: DatabaseReference
+    private lateinit var refLogTds: DatabaseReference
+    private lateinit var refNutrisiAB: DatabaseReference
 
-    private val nutrisiEntries = ArrayList<Entry>()
+    private val tdsEntries = ArrayList<Entry>()
     private var indexCounter = 0f
 
     override fun getLayoutResourceId(): Int = R.layout.activity_nutrisi
@@ -37,51 +37,54 @@ class NutrisiActivity : BaseActivity() {
         setToolbarTitle("Nutrisi AB")
 
         nutrisiChart = findViewById(R.id.nutrisiChart)
-        txtNutrisiValue = findViewById(R.id.txtNutrisiValue)
+        txtTdsValue = findViewById(R.id.txtTdsValue)
         btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
-        refLogNutrisi = FirebaseDatabase.getInstance().getReference("GrowSmart/log/nutrisi")
-        refKontrolNutrisi = FirebaseDatabase.getInstance().getReference("manual/nutrisi_ab")
 
-        refLogNutrisi.addValueEventListener(object : ValueEventListener {
+        refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/log/tds")
+        refNutrisiAB = FirebaseDatabase.getInstance().getReference("manual/nutrisi_ab")
+
+
+        refLogTds.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                nutrisiEntries.clear()
+                tdsEntries.clear()
                 indexCounter = 0f
 
-                val sortedData = snapshot.children.sortedBy { it.key?.toLongOrNull() }
-
-                for (data in sortedData) {
+                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
+                for (data in sorted) {
                     val valueStr = data.getValue(String::class.java)
                     val value = valueStr?.toFloatOrNull() ?: continue
-
-                    nutrisiEntries.add(Entry(indexCounter++, value))
+                    tdsEntries.add(Entry(indexCounter++, value))
                 }
 
-                if (nutrisiEntries.isNotEmpty()) {
-                    txtNutrisiValue.text = "${nutrisiEntries.last().y} ppm"
-                }
+                if (tdsEntries.isNotEmpty()) {
+                    txtTdsValue.text = "${tdsEntries.last().y} ppm"
+                    val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
+                        color = Color.BLUE
+                        valueTextColor = Color.BLACK
+                        lineWidth = 2f
+                        circleRadius = 4f
+                        setCircleColor(Color.BLUE)
+                        setDrawValues(false)
+                    }
 
-                val dataSet = LineDataSet(nutrisiEntries, "Nutrisi AB (ppm)").apply {
-                    color = Color.BLUE
-                    valueTextColor = Color.BLACK
-                    lineWidth = 2f
-                    circleRadius = 4f
-                    setCircleColor(Color.BLUE)
-                    setDrawValues(false)
+                    val lineData = LineData(dataSet)
+                    nutrisiChart.data = lineData
+                    nutrisiChart.description.text = "Grafik Nutrisi AB"
+                    nutrisiChart.invalidate()
+                } else {
+                    txtTdsValue.text = "Data tidak tersedia"
+                    nutrisiChart.clear()
                 }
-
-                nutrisiChart.data = LineData(dataSet)
-                nutrisiChart.description.text = "Grafik Nutrisi AB"
-                nutrisiChart.invalidate()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@NutrisiActivity, "Gagal mengambil data nutrisi", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NutrisiActivity, "Gagal ambil data: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
 
-        // Ambil status kontrol nutrisi
-        refKontrolNutrisi.addValueEventListener(object : ValueEventListener {
+
+        refNutrisiAB.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val isOn = snapshot.getValue(Boolean::class.java) ?: false
                 btnNutrisiAB.text = if (isOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
@@ -90,10 +93,11 @@ class NutrisiActivity : BaseActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
 
+       
         btnNutrisiAB.setOnClickListener {
-            refKontrolNutrisi.get().addOnSuccessListener { snapshot ->
+            refNutrisiAB.get().addOnSuccessListener { snapshot ->
                 val currentState = snapshot.getValue(Boolean::class.java) ?: false
-                refKontrolNutrisi.setValue(!currentState)
+                refNutrisiAB.setValue(!currentState)
                 showToastNutrisi(!currentState)
             }
         }
@@ -101,7 +105,6 @@ class NutrisiActivity : BaseActivity() {
 
     private fun showToastNutrisi(nyala: Boolean) {
         val layout = layoutInflater.inflate(R.layout.toast_status, findViewById(android.R.id.content), false)
-
         val icon = layout.findViewById<ImageView>(R.id.toast_icon)
         val text = layout.findViewById<TextView>(R.id.toast_text)
 
@@ -113,10 +116,11 @@ class NutrisiActivity : BaseActivity() {
             text.text = "Nutrisi AB berhasil DIMATIKAN"
         }
 
-        val toast = Toast(applicationContext)
-        toast.view = layout
-        toast.duration = Toast.LENGTH_SHORT
-        toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
-        toast.show()
+        Toast(this).apply {
+            view = layout
+            duration = Toast.LENGTH_SHORT
+            setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+            show()
+        }
     }
 }
