@@ -46,7 +46,6 @@ class NutrisiActivity : BaseActivity() {
         refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/log/tds")
         refNutrisiAB = FirebaseDatabase.getInstance().getReference("GrowSmart/status/manual/nutrisi_ab")
 
-        // === AMBIL DATA GRAFIK TDS ===
         refLogTds.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 tdsEntries.clear()
@@ -85,20 +84,22 @@ class NutrisiActivity : BaseActivity() {
             }
         })
 
-        // === AMBIL STATUS MANUAL NUTRISI AB ===
         refNutrisiAB.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 isNutrisiOn = snapshot.getValue(Boolean::class.java) ?: false
                 updateButtonText()
-                showToastNutrisi(isNutrisiOn)
+
+                if (sudahInteraksiManual) {
+                    showToastNutrisi(isNutrisiOn)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Firebase", "Gagal baca status nutrisi_ab: ${error.message}")
+                Toast.makeText(this@NutrisiActivity, "Gagal ambil data: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
 
-        // === KIRIM PERINTAH KE FIREBASE ===
+
         btnNutrisiAB.setOnClickListener {
             val newValue = !isNutrisiOn
             refNutrisiAB.setValue(newValue)
@@ -110,13 +111,11 @@ class NutrisiActivity : BaseActivity() {
                 }
         }
     }
-
-    // === UPDATE TEKS TOMBOL ===
+    private var sudahInteraksiManual = false
     private fun updateButtonText() {
         btnNutrisiAB.text = if (isNutrisiOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
     }
 
-    // === TAMPILKAN TOAST KUSTOM ===
     private fun showToastNutrisi(nyala: Boolean) {
         val layout = layoutInflater.inflate(R.layout.toast_status, findViewById(android.R.id.content), false)
         val icon = layout.findViewById<ImageView>(R.id.toast_icon)
