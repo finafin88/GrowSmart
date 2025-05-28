@@ -16,10 +16,10 @@ class SuhuActivity : BaseActivity() {
     private lateinit var suhuChart: LineChart
     private lateinit var txtSuhuValue: TextView
 
-    private lateinit var suhuRef: DatabaseReference
+    private lateinit var currentSuhuRef: DatabaseReference
+    private lateinit var logSuhuRef: DatabaseReference
 
     private val suhuEntries = ArrayList<Entry>()
-    private var indexCounter = 0f
 
     override fun getLayoutResourceId(): Int = R.layout.activity_suhu
 
@@ -30,47 +30,69 @@ class SuhuActivity : BaseActivity() {
         suhuChart = findViewById(R.id.suhuChart)
         txtSuhuValue = findViewById(R.id.txtSuhuValue)
 
-        suhuRef = FirebaseDatabase.getInstance().getReference("sensor/suhu")
+        val rootRef = FirebaseDatabase.getInstance().getReference("GrowSmart")
+        currentSuhuRef = rootRef.child("sensor/suhu")
+        logSuhuRef = rootRef.child("log/suhu")
 
+        bacaSuhuSekarang()
+        tampilkanGrafikSuhu()
+    }
 
-        suhuRef.addValueEventListener(object : ValueEventListener {
+    private fun bacaSuhuSekarang() {
+        currentSuhuRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val suhuStr = snapshot.getValue(String::class.java)
                 val suhu = suhuStr?.trim()?.toFloatOrNull()
 
                 if (suhu != null) {
-                    txtSuhuValue.text = "Suhu: $suhuStr °C"
-                    suhuEntries.add(Entry(indexCounter, suhu))
-                    indexCounter += 1f
-
-                    val dataSet = LineDataSet(suhuEntries, "Suhu (°C)").apply {
-                        color = Color.RED
-                        valueTextColor = Color.BLACK
-                        lineWidth = 2f
-                        circleRadius = 4f
-                        setCircleColor(Color.RED)
-                        setDrawValues(true)
-                    }
-
-                    val lineData = LineData(dataSet)
-                    suhuChart.data = lineData
-                    suhuChart.data.notifyDataChanged()
-                    suhuChart.notifyDataSetChanged()
-
-                    suhuChart.description = Description().apply {
-                        text = "Data Suhu (°C)"
-                        textColor = Color.DKGRAY
-                    }
-
-                    suhuChart.invalidate()
+                    txtSuhuValue.text = "Suhu: $suhu °C"
                 } else {
-                    txtSuhuValue.text = "Format suhu tidak valid"
+                    txtSuhuValue.text = "Data suhu tidak valid"
                     Log.e("SuhuActivity", "Gagal parsing suhu: '$suhuStr'")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 txtSuhuValue.text = "Gagal membaca suhu"
+                Log.e("SuhuActivity", "Database error: ${error.message}")
+            }
+        })
+    }
+
+    private fun tampilkanGrafikSuhu() {
+        logSuhuRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                suhuEntries.clear()
+                var index = 0f
+
+                for (data in snapshot.children) {
+                    val valueStr = data.getValue(String::class.java)
+                    val value = valueStr?.toFloatOrNull()
+                    if (value != null) {
+                        suhuEntries.add(Entry(index, value))
+                        index += 1f
+                    }
+                }
+
+                val dataSet = LineDataSet(suhuEntries, "Suhu (°C)").apply {
+                    color = Color.BLUE
+                    valueTextColor = Color.BLACK
+                    lineWidth = 2f
+                    circleRadius = 4f
+                    setCircleColor(Color.BLUE)
+                    setDrawValues(false)
+                }
+
+                suhuChart.data = LineData(dataSet)
+                suhuChart.description = Description().apply {
+                    text = "Riwayat Suhu (°C)"
+                    textColor = Color.DKGRAY
+                }
+                suhuChart.invalidate()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("SuhuActivity", "Gagal membaca log suhu: ${error.message}")
             }
         })
     }

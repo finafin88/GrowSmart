@@ -26,11 +26,14 @@
         android:textStyle="bold"
         android:paddingTop="8dp"/>
 
+
     <TextView
+        android:id="@+id/nav_header_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="android.studio@android.com"
+        android:text="Email"
         android:textColor="@android:color/white"
         android:textSize="14sp"/>
+
 
 </LinearLayout>

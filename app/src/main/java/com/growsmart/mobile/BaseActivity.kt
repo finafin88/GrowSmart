@@ -16,6 +16,9 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import android.widget.TextView
+
+
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -29,6 +32,11 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
         navView.setNavigationItemSelectedListener(this)
+
+        val user = FirebaseAuth.getInstance().currentUser
+        val headerView = navView.getHeaderView(0)
+        val emailTextView = headerView.findViewById<TextView>(R.id.nav_header_email)
+        emailTextView.text = user?.email ?: "Belum login"
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
