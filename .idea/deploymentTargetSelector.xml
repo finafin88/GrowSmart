@@ -8,13 +8,13 @@
       <SelectionState runConfigName="Nutrisi">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="login">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Ph">
+      <SelectionState runConfigName="suhu">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Suhu">
+      <SelectionState runConfigName="PH">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
