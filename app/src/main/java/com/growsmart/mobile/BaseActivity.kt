@@ -67,6 +67,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             R.id.nav_suhu -> startActivity(Intent(this, SuhuActivity::class.java))
             R.id.nav_ph -> startActivity(Intent(this, PhActivity::class.java))
             R.id.nav_nutrisi -> startActivity(Intent(this, NutrisiActivity::class.java))
+            R.id.nav_katup -> startActivity(Intent(this, KatupActivity::class.java))
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
