@@ -2,7 +2,6 @@ package com.growsmart.mobile
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import androidx.drawerlayout.widget.DrawerLayout
 import android.widget.Button
 import android.widget.ArrayAdapter
 import android.widget.Spinner
@@ -52,20 +51,13 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
 
-
         chart = findViewById(R.id.chartSuhuPreview)
         txtSuhu = findViewById(R.id.txtSuhu)
         txtPh = findViewById(R.id.txtPh)
         txtTds = findViewById(R.id.txtTds)
 
-
-
         drawerLayout = findViewById(R.id.drawer_layout)
         btnModeToggle = findViewById(R.id.btnModeToggle)
-
-
-
-
 
         database = FirebaseDatabase.getInstance()
         sensorRef = database.getReference("sensor")
@@ -73,18 +65,25 @@ class MainActivity : BaseActivity() {
         modeRef = database.getReference("perintah/mode")
 
 
+        val btnModeToggle = findViewById<Button>(R.id.btnModeToggle)
+        val btnAturManual = findViewById<Button>(R.id.btnAturManual)
+
         btnModeToggle.setOnClickListener {
             isManualMode = !isManualMode
-            val newMode = if (isManualMode) "manual" else "otomatis"
 
-            modeRef.setValue(newMode)
-                .addOnSuccessListener {
-                    Toast.makeText(this@MainActivity, "Mode sekarang: $newMode", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this@MainActivity, "Gagal mengubah mode", Toast.LENGTH_SHORT).show()
-                }
+            if (isManualMode) {
+                btnModeToggle.text = "MODE: MANUAL"
+                btnAturManual.visibility = View.VISIBLE
+            } else {
+                btnModeToggle.text = "MODE: OTOMATIS"
+                btnAturManual.visibility = View.GONE
+            }
         }
+
+        btnAturManual.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
 
         val spinner = findViewById<Spinner>(R.id.spinnerGrafik)
         val grafikOptions = arrayOf("Suhu", "pH", "Nutrisi")
