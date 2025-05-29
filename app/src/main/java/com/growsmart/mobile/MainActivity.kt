@@ -1,5 +1,6 @@
 package com.growsmart.mobile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.drawerlayout.widget.DrawerLayout
 import android.widget.Button
@@ -29,6 +30,7 @@ class MainActivity : BaseActivity() {
     private lateinit var txtSuhu: TextView
     private lateinit var txtPh: TextView
     private lateinit var txtTds: TextView
+    private var isManualMode = false
 
     private lateinit var database: FirebaseDatabase
     private lateinit var sensorRef: DatabaseReference
@@ -46,9 +48,19 @@ class MainActivity : BaseActivity() {
         txtTds = findViewById(R.id.txtTds)
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val btnManual = findViewById<Button>(R.id.btnManualControl)
-        btnManual.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
+        val btnModeToggle = findViewById<Button>(R.id.btnModeToggle)
+
+        btnModeToggle.setOnClickListener {
+            isManualMode = !isManualMode
+
+            if (isManualMode) {
+                btnModeToggle.text = "Mode: Manual"
+                btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK))
+                drawerLayout.openDrawer(GravityCompat.START)
+            } else {
+                btnModeToggle.text = "Mode: Otomatis"
+                btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")))
+            }
         }
 
         val spinner = findViewById<Spinner>(R.id.spinnerGrafik)
@@ -78,6 +90,7 @@ class MainActivity : BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
+
 
     private fun tampilkanNilaiSensor() {
         sensorRef.addValueEventListener(object : ValueEventListener {
