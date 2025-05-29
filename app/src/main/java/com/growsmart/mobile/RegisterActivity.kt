@@ -2,6 +2,8 @@ package com.growsmart.mobile
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -24,6 +26,20 @@ class RegisterActivity : AppCompatActivity() {
         val registerButton = findViewById<Button>(R.id.registerButton)
         val loginRedirect = findViewById<TextView>(R.id.loginRedirectText)
 
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val emailInput = s.toString().trim()
+                if (!emailInput.endsWith("@gmail.com")) {
+                    emailEditText.error = "Email harus @gmail.com"
+                } else {
+                    emailEditText.error = null // hilangkan error kalau sudah benar
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -35,6 +51,11 @@ class RegisterActivity : AppCompatActivity() {
 
             if (password.length < 6) {
                 Toast.makeText(this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!email.matches(Regex("^[A-Za-z0-9._%+-]+@gmail\\.com$"))) {
+                Toast.makeText(this, "Format email harus valid dan pakai @gmail.com", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

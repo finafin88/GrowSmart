@@ -31,12 +31,26 @@ class LoginActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.loginButton)
         registerTextView = findViewById(R.id.registerTextView)
 
+        emailEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val emailInput = emailEditText.text.toString().trim()
+                if (!emailInput.endsWith("@gmail.com")) {
+                    emailEditText.error = "Email harus menggunakan @gmail.com"
+                }
+            }
+        }
+
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Email dan password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!email.endsWith("@gmail.com")) {
+                Toast.makeText(this, "Login hanya untuk email @gmail.com", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
