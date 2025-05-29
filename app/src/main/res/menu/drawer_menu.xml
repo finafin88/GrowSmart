@@ -20,4 +20,9 @@
         android:title="@string/nav_nutrisi"
         android:icon="@android:drawable/ic_menu_agenda" />
 
+    <item
+        android:id="@+id/nav_katup"
+        android:icon="@drawable/ic_valve"
+        android:title="Katup" />
+
 </menu>

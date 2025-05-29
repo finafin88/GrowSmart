@@ -28,9 +28,6 @@
         android:visibility="gone"
         android:layout_marginBottom="8dp" />
 
-
-
-
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/phChart"
         android:layout_width="match_parent"
