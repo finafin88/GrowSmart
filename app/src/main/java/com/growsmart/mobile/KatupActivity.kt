@@ -25,6 +25,8 @@ class KatupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
         btnPompa = findViewById(R.id.btnPompa)
 
         btnPompa.setOnClickListener {
@@ -45,6 +47,9 @@ class KatupActivity : BaseActivity() {
                 if (katupAktif) R.drawable.bg_button_on else R.drawable.bg_button_off
             )
             showToastKatupMasuk(katupAktif)
+
+            val katupAktifRef = FirebaseDatabase.getInstance().getReference("kontrol_manual/katup_isi")
+            katupAktifRef.setValue(if (katupAktif) 1 else 0)
         }
 
         btnKatupKeluar = findViewById(R.id.btnKatupKeluar)
@@ -56,6 +61,9 @@ class KatupActivity : BaseActivity() {
                 if (katupKeluarAktif) R.drawable.bg_button_on else R.drawable.bg_button_off
             )
             showToastKatupKeluar(katupKeluarAktif)
+
+            val katupKeluarRef = FirebaseDatabase.getInstance().getReference("kontrol_manual/katup_buang")
+            katupKeluarRef.setValue(if (katupKeluarAktif) 1 else 0)
         }
 
     }
