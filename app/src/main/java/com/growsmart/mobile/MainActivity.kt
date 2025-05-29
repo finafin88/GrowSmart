@@ -38,11 +38,13 @@ class MainActivity : BaseActivity() {
     private lateinit var txtSuhu: TextView
     private lateinit var txtPh: TextView
     private lateinit var txtTds: TextView
+    private lateinit var btnModeToggle: Button
     private var isManualMode = false
 
     private lateinit var database: FirebaseDatabase
     private lateinit var sensorRef: DatabaseReference
     private lateinit var logRef: DatabaseReference
+    private lateinit var modeRef: DatabaseReference
 
     override fun getLayoutResourceId(): Int = R.layout.activity_main
 
@@ -50,25 +52,38 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
 
+
         chart = findViewById(R.id.chartSuhuPreview)
         txtSuhu = findViewById(R.id.txtSuhu)
         txtPh = findViewById(R.id.txtPh)
         txtTds = findViewById(R.id.txtTds)
 
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val btnModeToggle = findViewById<Button>(R.id.btnModeToggle)
+
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+        btnModeToggle = findViewById(R.id.btnModeToggle)
+
+
+
+
+
+        database = FirebaseDatabase.getInstance()
+        sensorRef = database.getReference("sensor")
+        logRef = database.getReference("GrowSmart/log")
+        modeRef = database.getReference("perintah/mode")
+
 
         btnModeToggle.setOnClickListener {
             isManualMode = !isManualMode
+            val newMode = if (isManualMode) "manual" else "otomatis"
 
-            if (isManualMode) {
-                btnModeToggle.text = "Mode: Manual"
-                btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK))
-                drawerLayout.openDrawer(GravityCompat.START)
-            } else {
-                btnModeToggle.text = "Mode: Otomatis"
-                btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")))
-            }
+            modeRef.setValue(newMode)
+                .addOnSuccessListener {
+                    Toast.makeText(this@MainActivity, "Mode sekarang: $newMode", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this@MainActivity, "Gagal mengubah mode", Toast.LENGTH_SHORT).show()
+                }
         }
 
         val spinner = findViewById<Spinner>(R.id.spinnerGrafik)
@@ -77,12 +92,6 @@ class MainActivity : BaseActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
-        database = FirebaseDatabase.getInstance()
-        sensorRef = database.getReference("sensor")
-        logRef = database.getReference("GrowSmart/log")
-
-        tampilkanNilaiSensor()
-        pantauPeringatan()
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -97,6 +106,31 @@ class MainActivity : BaseActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        tampilkanNilaiSensor()
+        tampilkanModeFirebase()
+        pantauPeringatan()
+    }
+
+    private fun tampilkanModeFirebase() {
+        modeRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val mode = snapshot.getValue(String::class.java)
+                isManualMode = (mode == "manual")
+
+                if (isManualMode) {
+                    btnModeToggle.text = "Mode: Manual"
+                    btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK))
+                } else {
+                    btnModeToggle.text = "Mode: Otomatis"
+                    btnModeToggle.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, "Gagal ambil mode", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
 
@@ -180,6 +214,7 @@ class MainActivity : BaseActivity() {
                     tampilkanNotifikasi("Peringatan pH", status)
                 }
             }
+
 
             override fun onCancelled(error: DatabaseError) {}
         })
