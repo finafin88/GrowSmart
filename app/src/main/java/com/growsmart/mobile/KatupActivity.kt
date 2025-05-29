@@ -2,7 +2,6 @@ package com.growsmart.mobile
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,29 +27,24 @@ class KatupActivity : BaseActivity() {
 
         btnPompa = findViewById(R.id.btnPompa)
 
-
         btnPompa.setOnClickListener {
             isPompaOn = !isPompaOn
             updatePompaButton()
             showToastPompa(isPompaOn)
 
-            // (Opsional) kirim ke Firebase
             val pompaRef = FirebaseDatabase.getInstance().getReference("kontrol_manual/pompa")
             pompaRef.setValue(isPompaOn)
         }
+
         btnKatup = findViewById(R.id.btnKatup)
 
         btnKatup.setOnClickListener {
             katupAktif = !katupAktif
-            if (katupAktif) {
-                btnKatup.text = "Katup ON"
-                btnKatup.setBackgroundResource(R.drawable.bg_button_on)
-                Toast.makeText(this, "Katup berhasil DIBUKA", Toast.LENGTH_SHORT).show()
-            } else {
-                btnKatup.text = "Katup OFF"
-                btnKatup.setBackgroundResource(R.drawable.bg_button_off)
-                Toast.makeText(this, "Katup berhasil DITUTUP", Toast.LENGTH_SHORT).show()
-            }
+            btnKatup.text = if (katupAktif) "Katup ON" else "Katup OFF"
+            btnKatup.setBackgroundResource(
+                if (katupAktif) R.drawable.bg_button_on else R.drawable.bg_button_off
+            )
+            showToastKatupMasuk(katupAktif)
         }
 
         btnKatupKeluar = findViewById(R.id.btnKatupKeluar)
@@ -61,14 +55,8 @@ class KatupActivity : BaseActivity() {
             btnKatupKeluar.setBackgroundResource(
                 if (katupKeluarAktif) R.drawable.bg_button_on else R.drawable.bg_button_off
             )
-
-            Toast.makeText(
-                this,
-                if (katupKeluarAktif) "Katup Keluar berhasil DIBUKA" else "Katup Keluar berhasil DITUTUP",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToastKatupKeluar(katupKeluarAktif)
         }
-
 
     }
 
@@ -101,4 +89,44 @@ class KatupActivity : BaseActivity() {
         toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
         toast.show()
     }
+    private fun showToastKatupMasuk(aktif: Boolean) {
+        val layout = layoutInflater.inflate(R.layout.toast_status, null)
+        val icon = layout.findViewById<ImageView>(R.id.toast_icon)
+        val text = layout.findViewById<TextView>(R.id.toast_text)
+
+        if (aktif) {
+            icon.setImageResource(R.drawable.ic_check_circle)
+            text.text = "Katup Masuk berhasil DIBUKA"
+        } else {
+            icon.setImageResource(R.drawable.ic_error)
+            text.text = "Katup Masuk berhasil DITUTUP"
+        }
+
+        val toast = Toast(applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+        toast.show()
+    }
+    private fun showToastKatupKeluar(aktif: Boolean) {
+        val layout = layoutInflater.inflate(R.layout.toast_status, null)
+        val icon = layout.findViewById<ImageView>(R.id.toast_icon)
+        val text = layout.findViewById<TextView>(R.id.toast_text)
+
+        if (aktif) {
+            icon.setImageResource(R.drawable.ic_check_circle)
+            text.text = "Katup Keluar berhasil DIBUKA"
+        } else {
+            icon.setImageResource(R.drawable.ic_error)
+            text.text = "Katup Keluar berhasil DITUTUP"
+        }
+
+        val toast = Toast(applicationContext)
+        toast.view = layout
+        toast.duration = Toast.LENGTH_SHORT
+        toast.setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+        toast.show()
+    }
+
+
 }

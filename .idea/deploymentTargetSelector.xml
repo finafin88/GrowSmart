@@ -11,7 +11,10 @@
       <SelectionState runConfigName="login">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="katup">
+      <SelectionState runConfigName="suhu">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Katup">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
