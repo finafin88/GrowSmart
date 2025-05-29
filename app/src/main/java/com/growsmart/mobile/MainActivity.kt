@@ -68,17 +68,21 @@ class MainActivity : BaseActivity() {
         val btnModeToggle = findViewById<Button>(R.id.btnModeToggle)
         val btnAturManual = findViewById<Button>(R.id.btnAturManual)
 
+
         btnModeToggle.setOnClickListener {
             isManualMode = !isManualMode
+            val newMode = if (isManualMode) "manual" else "otomatis"
 
-            if (isManualMode) {
-                btnModeToggle.text = "MODE: MANUAL"
-                btnAturManual.visibility = View.VISIBLE
-            } else {
-                btnModeToggle.text = "MODE: OTOMATIS"
-                btnAturManual.visibility = View.GONE
-            }
+            modeRef.setValue(newMode)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Mode diubah ke: $newMode", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Gagal mengubah mode", Toast.LENGTH_SHORT).show()
+                }
         }
+
+
 
         btnAturManual.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
