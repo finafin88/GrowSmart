@@ -86,25 +86,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="start"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
+                android:gravity="center"
+                android:layout_marginTop="16dp">
 
                 <Button
                     android:id="@+id/btnModeToggle"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="MODE: OTOMATIS"
+                    android:layout_height="wrap_content"
+                    android:text="MODE: MANUAL"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:backgroundTint="@android:color/holo_green_dark"
                     android:textColor="@android:color/white"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="12dp"
-                    android:elevation="2dp" />
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="2dp"/>
+
+                <Button
+                    android:id="@+id/btnAturManual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ATUR MANUAL"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:textColor="@android:color/white"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone"
+                    android:elevation="2dp"/>
             </LinearLayout>
+
 
 
             <Spinner
@@ -119,8 +133,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginBottom="16dp" />
-
-
 
         </LinearLayout>
     </ScrollView>
