@@ -43,10 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Katup OFF"
+            android:text="Katup_OFF"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:background="@drawable/bg_button_off" />
+
 
         <TextView
             android:layout_width="wrap_content"
