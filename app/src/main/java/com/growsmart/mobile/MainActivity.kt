@@ -17,6 +17,14 @@ import android.util.Log
 import android.graphics.Color
 import android.widget.Toast
 import android.widget.TextView
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.core.app.NotificationCompat
+
 
 
 
@@ -38,7 +46,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        createNotificationChannel()
 
         chart = findViewById(R.id.chartSuhuPreview)
         txtSuhu = findViewById(R.id.txtSuhu)
@@ -57,12 +65,12 @@ class MainActivity : BaseActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
-        
         database = FirebaseDatabase.getInstance()
         sensorRef = database.getReference("sensor")
         logRef = database.getReference("GrowSmart/log")
 
         tampilkanNilaiSensor()
+        pantauPeringatan()
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -86,9 +94,9 @@ class MainActivity : BaseActivity() {
                 val ph = snapshot.child("ph").getValue(String::class.java)
                 val tds = snapshot.child("tds").getValue(String::class.java)
 
-                if (suhu != null) txtSuhu.text = "Suhu: $suhu °C" else txtSuhu.text = "Suhu: -- °C"
-                if (ph != null) txtPh.text = "pH: $ph" else txtPh.text = "pH: --"
-                if (tds != null) txtTds.text = "TDS: $tds ppm" else txtTds.text = "TDS: -- ppm"
+                txtSuhu.text = "Suhu: ${suhu ?: "--"} °C"
+                txtPh.text = "pH: ${ph ?: "--"}"
+                txtTds.text = "TDS: ${tds ?: "--"} ppm"
 
                 Log.d("FirebaseSensor", "suhu=$suhu, ph=$ph, tds=$tds")
             }
@@ -146,5 +154,63 @@ class MainActivity : BaseActivity() {
                 Log.e("FirebaseLog", "Gagal ambil grafik $kategori: ${error.message}")
             }
         })
+    }
+
+    private fun pantauPeringatan() {
+        val refPh = database.getReference("GrowSmart/status/peringatan/ph")
+        val refNutrisi = database.getReference("GrowSmart/status/peringatan/nutrisi")
+
+        refPh.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val status = snapshot.getValue(String::class.java)
+                if (status != null && status != "Normal") {
+                    tampilkanNotifikasi("Peringatan pH", status)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+        refNutrisi.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val status = snapshot.getValue(String::class.java)
+                if (status != null && status != "Normal") {
+                    tampilkanNotifikasi("Peringatan Nutrisi", status)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    private fun tampilkanNotifikasi(judul: String, isi: String) {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val builder = NotificationCompat.Builder(this, "PERINGATAN_SENSOR")
+            .setSmallIcon(R.drawable.ic_warning)
+            .setContentTitle(judul)
+            .setContentText(isi)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Peringatan Sensor"
+            val descriptionText = "Notifikasi untuk pH dan Nutrisi"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("PERINGATAN_SENSOR", name, importance).apply {
+                description = descriptionText
+            }
+
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
