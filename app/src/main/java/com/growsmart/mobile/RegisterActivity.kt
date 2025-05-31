@@ -37,7 +37,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (!emailInput.endsWith("@gmail.com")) {
                     emailEditText.error = "Email harus @gmail.com"
                 } else {
-                    emailEditText.error = null // hilangkan error kalau sudah benar
+                    emailEditText.error = null
                 }
             }
 
