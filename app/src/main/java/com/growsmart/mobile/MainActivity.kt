@@ -66,7 +66,6 @@ class MainActivity : BaseActivity() {
 
 
         val btnModeToggle = findViewById<Button>(R.id.btnModeToggle)
-        val btnAturManual = findViewById<Button>(R.id.btnAturManual)
 
 
         btnModeToggle.setOnClickListener {
@@ -76,18 +75,16 @@ class MainActivity : BaseActivity() {
             modeRef.setValue(newMode)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Mode diubah ke: $newMode", Toast.LENGTH_SHORT).show()
+                    
+                    if (newMode == "manual") {
+                        drawerLayout.openDrawer(GravityCompat.START)
+                    }
+
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Gagal mengubah mode", Toast.LENGTH_SHORT).show()
                 }
         }
-
-
-
-        btnAturManual.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
-
 
         val spinner = findViewById<Spinner>(R.id.spinnerGrafik)
         val grafikOptions = arrayOf("Suhu", "pH", "Nutrisi")

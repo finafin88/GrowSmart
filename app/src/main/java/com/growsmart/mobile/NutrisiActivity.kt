@@ -109,6 +109,7 @@ class NutrisiActivity : BaseActivity() {
                 .addOnFailureListener {
                     Toast.makeText(this, "Gagal mengirim perintah", Toast.LENGTH_SHORT).show()
                 }
+            showToastNutrisi(isNutrisiOn)
         }
     }
     private var sudahInteraksiManual = false
