@@ -11,11 +11,12 @@
 
     <TextView
         android:id="@+id/txtTdsValue"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="- ppm"
+        android:text="Nilai Nutrisi = - ppm"
         android:textSize="18sp"
         android:textColor="@android:color/black"
+        android:gravity="center"
         android:layout_marginTop="8dp" />
 
 

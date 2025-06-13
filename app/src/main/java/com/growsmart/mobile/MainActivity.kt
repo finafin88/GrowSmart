@@ -60,7 +60,7 @@ class MainActivity : BaseActivity() {
         btnModeToggle = findViewById(R.id.btnModeToggle)
 
         database = FirebaseDatabase.getInstance()
-        sensorRef = database.getReference("sensor")
+        sensorRef = database.getReference("GrowSmart/sensor")
         logRef = database.getReference("GrowSmart/log")
         modeRef = database.getReference("perintah/mode")
 

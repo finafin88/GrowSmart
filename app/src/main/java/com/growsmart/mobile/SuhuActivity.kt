@@ -48,7 +48,8 @@ class SuhuActivity : BaseActivity() {
                 val suhu = suhuStr?.trim()?.toFloatOrNull()
 
                 if (suhu != null) {
-                    txtSuhuValue.text = "Suhu: $suhu °C"
+                    val formatted = String.format("%.1f", suhu)
+                    txtSuhuValue.text = "Nilai Suhu = $formatted °C"
                 } else {
                     txtSuhuValue.text = "Data suhu tidak valid"
                     Log.e("SuhuActivity", "Gagal parsing suhu: '$suhuStr'")

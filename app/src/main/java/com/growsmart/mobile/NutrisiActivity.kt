@@ -59,7 +59,8 @@ class NutrisiActivity : BaseActivity() {
                 }
 
                 if (tdsEntries.isNotEmpty()) {
-                    txtTdsValue.text = "${tdsEntries.last().y} ppm"
+                    val formatted = String.format("%.1f", tdsEntries.last().y)
+                    txtTdsValue.text = "Nilai Nutrisi = $formatted ppm"
                     val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
                         color = Color.BLUE
                         valueTextColor = Color.BLACK

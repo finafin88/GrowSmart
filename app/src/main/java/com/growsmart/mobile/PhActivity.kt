@@ -41,7 +41,7 @@ class PhActivity : BaseActivity() {
         btnPhDown = findViewById(R.id.btnPhDown)
 
         val database = FirebaseDatabase.getInstance()
-        sensorRef = database.getReference("sensor/ph")
+        val sensorRef = database.getReference("GrowSmart/sensor/ph")
         logPhRef = database.getReference("GrowSmart/log/ph")
         controlRef = database.getReference("GrowSmart/status/manual/ph")
 
@@ -50,7 +50,7 @@ class PhActivity : BaseActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val value = snapshot.getValue<String>()
                 value?.let {
-                    txtPhValue.text = "$it"
+                    txtPhValue.text = "Nilai pH = $it"
                 }
             }
 

@@ -8,23 +8,16 @@
     android:paddingRight="16dp"
     android:paddingBottom="0dp">
 
-    <TextView
-        android:id="@+id/judulSuhu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data Suhu (°C)"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/txtSuhuValue"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suhu: -"
+        android:text="Nilai Suhu= - °C"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center"
         android:layout_marginBottom="8dp"/>
 
     <com.github.mikephil.charting.charts.LineChart

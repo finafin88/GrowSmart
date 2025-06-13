@@ -16,13 +16,13 @@
       <SelectionState runConfigName="Nutrisi">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="login">
+      <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PH">
+      <SelectionState runConfigName="Ph">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Katup">
+      <SelectionState runConfigName="Suhu">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
