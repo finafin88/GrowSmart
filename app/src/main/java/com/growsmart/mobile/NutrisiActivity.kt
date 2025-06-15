@@ -43,7 +43,7 @@ class NutrisiActivity : BaseActivity() {
         txtTdsValue = findViewById(R.id.txtTdsValue)
         btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
-        refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/log/tds")
+        refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/sensor/tds")
         refNutrisiAB = FirebaseDatabase.getInstance().getReference("GrowSmart/status/manual/nutrisi_ab")
 
         refLogTds.addValueEventListener(object : ValueEventListener {
