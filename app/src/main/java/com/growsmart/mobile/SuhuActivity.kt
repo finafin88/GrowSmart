@@ -88,6 +88,12 @@ class SuhuActivity : BaseActivity() {
                 }
 
                 suhuChart.data = LineData(dataSet)
+
+                val yAxis =suhuChart.axisLeft
+                yAxis.axisMinimum = 15f
+                yAxis.axisMaximum = 40f
+                suhuChart.axisRight.isEnabled = false
+
                 suhuChart.description = Description().apply {
                     text = "Riwayat Suhu (°C)"
                     textColor = Color.DKGRAY

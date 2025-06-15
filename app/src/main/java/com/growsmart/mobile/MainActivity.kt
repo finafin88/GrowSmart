@@ -193,6 +193,24 @@ class MainActivity : BaseActivity() {
                 }
 
                 chart.data = LineData(dataSet)
+
+                val yAxis = chart.axisLeft
+                when (kategori) {
+                    "suhu" -> {
+                        yAxis.axisMinimum = 15f
+                        yAxis.axisMaximum = 40f
+                    }
+                    "ph" -> {
+                        yAxis.axisMinimum = 0f
+                        yAxis.axisMaximum = 14f
+                    }
+                    "tds" -> {
+                        yAxis.axisMinimum = 0f
+                        yAxis.axisMaximum = 1000f
+                    }
+                }
+                chart.axisRight.isEnabled = false
+
                 chart.description.text = "Grafik $label"
                 chart.invalidate()
             }

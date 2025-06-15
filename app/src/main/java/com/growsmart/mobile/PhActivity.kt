@@ -50,7 +50,7 @@ class PhActivity : BaseActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val value = snapshot.getValue<String>()
                 value?.let {
-                    txtPhValue.text = "Nilai pH = $it"
+                   txtPhValue.text = "Nilai pH = $it"
                 }
             }
 
@@ -73,6 +73,17 @@ class PhActivity : BaseActivity() {
                 dataSet.lineWidth = 2f
                 dataSet.setDrawValues(false)
                 dataSet.setDrawCircles(true)
+
+                val lineData = LineData(dataSet)
+                phChart.data = lineData
+
+                val yAxis = phChart.axisLeft
+                yAxis.axisMinimum = -0f
+                yAxis.axisMaximum = 14f
+                phChart.axisRight.isEnabled = false
+
+                phChart.description.text = "Grafik pH"
+                phChart.invalidate()
 
                 phChart.data = LineData(dataSet)
                 phChart.invalidate()

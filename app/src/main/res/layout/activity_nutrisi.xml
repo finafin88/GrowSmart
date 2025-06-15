@@ -15,8 +15,9 @@
         android:layout_height="wrap_content"
         android:text="Nilai Nutrisi = - ppm"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:gravity="center"
+        android:gravity="start"
         android:layout_marginTop="8dp" />
 
 
@@ -25,15 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data Nutrisi AB (ppm)"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp" />
 
     <TextView
         android:layout_width="wrap_content"

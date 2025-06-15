@@ -72,6 +72,12 @@ class NutrisiActivity : BaseActivity() {
 
                     val lineData = LineData(dataSet)
                     nutrisiChart.data = lineData
+
+                    val yAxis = nutrisiChart.axisLeft
+                    yAxis.axisMinimum = 0f
+                    yAxis.axisMaximum = 1000f
+                    nutrisiChart.axisRight.isEnabled = false
+
                     nutrisiChart.description.text = "Grafik Nutrisi AB"
                     nutrisiChart.invalidate()
                 } else {
