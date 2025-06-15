@@ -156,18 +156,18 @@ class MainActivity : BaseActivity() {
 
     private fun tampilkanGrafikDariLog(kategori: String) {
         val entries = ArrayList<Entry>()
-        val ref = logRef.child(kategori)
+        val query = logRef.child(kategori).limitToLast(30)
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 entries.clear()
-                var index = 0f
 
-                for (data in snapshot.children) {
-                    val value = data.getValue(String::class.java)?.toFloatOrNull()
-                    if (value != null) {
-                        entries.add(Entry(index++, value))
-                    }
+                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
+
+                for (data in sorted) {
+                    val x = data.key?.toFloatOrNull() ?: continue
+                    val y = data.getValue(String::class.java)?.toFloatOrNull() ?: continue
+                    entries.add(Entry(x, y))
                 }
 
                 if (entries.isEmpty()) {
@@ -190,6 +190,7 @@ class MainActivity : BaseActivity() {
                     lineWidth = 2f
                     circleRadius = 4f
                     setDrawValues(false)
+                    mode = LineDataSet.Mode.LINEAR
                 }
 
                 chart.data = LineData(dataSet)
@@ -220,6 +221,7 @@ class MainActivity : BaseActivity() {
             }
         })
     }
+
 
     private fun pantauPeringatan() {
         val refPh = database.getReference("GrowSmart/status/peringatan/ph")

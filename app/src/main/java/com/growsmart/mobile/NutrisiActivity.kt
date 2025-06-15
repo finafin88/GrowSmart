@@ -28,6 +28,10 @@ class NutrisiActivity : BaseActivity() {
 
     private lateinit var refLogTds: DatabaseReference
     private lateinit var refNutrisiAB: DatabaseReference
+    private lateinit var refLogTdsGrafik: DatabaseReference
+
+
+
 
     private var isNutrisiOn: Boolean = false
     private val tdsEntries = ArrayList<Entry>()
@@ -43,24 +47,22 @@ class NutrisiActivity : BaseActivity() {
         txtTdsValue = findViewById(R.id.txtTdsValue)
         btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
-        refLogTds = FirebaseDatabase.getInstance().getReference("GrowSmart/sensor/tds")
-        refNutrisiAB = FirebaseDatabase.getInstance().getReference("GrowSmart/status/manual/nutrisi_ab")
+        val database = FirebaseDatabase.getInstance()
+        refLogTds = database.getReference("GrowSmart/sensor/tds")
+        refLogTdsGrafik = database.getReference("GrowSmart/log/tds")
+        refNutrisiAB = database.getReference("GrowSmart/status/manual/nutrisi_ab")
+
 
         refLogTds.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                tdsEntries.clear()
-                indexCounter = 0f
+                val valueStr = snapshot.getValue(String::class.java)
+                val value = valueStr?.toFloatOrNull()
 
-                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
-                for (data in sorted) {
-                    val valueStr = data.getValue(String::class.java)
-                    val value = valueStr?.toFloatOrNull() ?: continue
+                if (value != null) {
+                    txtTdsValue.text = "Nilai Nutrisi = %.1f ppm".format(value)
+
+
                     tdsEntries.add(Entry(indexCounter++, value))
-                }
-
-                if (tdsEntries.isNotEmpty()) {
-                    val formatted = String.format("%.1f", tdsEntries.last().y)
-                    txtTdsValue.text = "Nilai Nutrisi = $formatted ppm"
                     val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
                         color = Color.BLUE
                         valueTextColor = Color.BLACK
@@ -68,6 +70,7 @@ class NutrisiActivity : BaseActivity() {
                         circleRadius = 4f
                         setCircleColor(Color.BLUE)
                         setDrawValues(false)
+                        mode = LineDataSet.Mode.LINEAR
                     }
 
                     val lineData = LineData(dataSet)
@@ -90,6 +93,45 @@ class NutrisiActivity : BaseActivity() {
                 Toast.makeText(this@NutrisiActivity, "Gagal ambil data: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
+        refLogTdsGrafik.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                tdsEntries.clear()
+                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
+
+                for (data in sorted) {
+                    val x = data.key?.toFloatOrNull() ?: continue
+                    val y = data.getValue(String::class.java)?.toFloatOrNull() ?: continue
+                    tdsEntries.add(Entry(x, y))
+                }
+
+                if (tdsEntries.isNotEmpty()) {
+                    val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
+                        color = Color.BLUE
+                        valueTextColor = Color.BLACK
+                        lineWidth = 2f
+                        circleRadius = 3f
+                        setCircleColor(Color.BLUE)
+                        setDrawValues(false)
+                        mode = LineDataSet.Mode.LINEAR
+                    }
+
+                    nutrisiChart.data = LineData(dataSet)
+                    nutrisiChart.axisLeft.axisMinimum = 0f
+                    nutrisiChart.axisLeft.axisMaximum = 1000f
+                    nutrisiChart.axisRight.isEnabled = false
+                    nutrisiChart.description.text = "Grafik Nutrisi AB"
+                    nutrisiChart.invalidate()
+                } else {
+                    nutrisiChart.clear()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@NutrisiActivity, "Gagal ambil grafik: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
 
         refNutrisiAB.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
