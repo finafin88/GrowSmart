@@ -20,9 +20,7 @@ class SuhuActivity : BaseActivity() {
     private lateinit var suhuChart: LineChart
     private lateinit var txtSuhuValue: TextView
 
-    private lateinit var currentSuhuRef: DatabaseReference
     private lateinit var logSuhuRef: DatabaseReference
-
     private val suhuEntries = ArrayList<Entry>()
 
     override fun getLayoutResourceId(): Int = R.layout.activity_suhu
@@ -35,87 +33,68 @@ class SuhuActivity : BaseActivity() {
         txtSuhuValue = findViewById(R.id.txtSuhuValue)
 
         val database = FirebaseDatabase.getInstance()
-        currentSuhuRef = database.getReference("sensor/suhu")
         logSuhuRef = database.getReference("GrowSmart/log/suhu")
 
-
-
-
-        bacaSuhuSekarang()
-        tampilkanGrafikSuhu()
+        tampilkanGrafikDanNilaiSuhu()
     }
 
-    private fun bacaSuhuSekarang() {
-        currentSuhuRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val suhuStr = snapshot.getValue(String::class.java)
-                val suhu = suhuStr?.trim()?.toFloatOrNull()
-
-                if (suhu != null) {
-                    val formatted = String.format("%.1f", suhu)
-                    txtSuhuValue.text = "Nilai Suhu = $formatted °C"
-                } else {
-                    txtSuhuValue.text = "Data suhu tidak valid"
-                    Log.e("SuhuActivity", "Gagal parsing suhu: '$suhuStr'")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                txtSuhuValue.text = "Gagal membaca suhu"
-                Log.e("SuhuActivity", "Database error: ${error.message}")
-            }
-        })
-    }
-
-    private fun tampilkanGrafikSuhu() {
+    private fun tampilkanGrafikDanNilaiSuhu() {
         logSuhuRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 suhuEntries.clear()
-                var index = 0f
 
-                for (data in snapshot.children) {
-                    val valueStr = data.getValue(String::class.java)
-                    val value = valueStr?.toFloatOrNull()
-                    if (value != null) {
-                        suhuEntries.add(Entry(index, value))
-                        index += 1f
+                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
+
+                for (data in sorted) {
+                    val x = data.key?.toFloatOrNull() ?: continue
+                    val y = data.getValue(String::class.java)?.toFloatOrNull() ?: continue
+                    suhuEntries.add(Entry(x, y))
+                }
+
+                if (suhuEntries.isNotEmpty()) {
+                    // ✅ Ambil nilai terakhir
+                    val latestSuhu = suhuEntries.last().y
+                    txtSuhuValue.text = "Nilai Suhu = %.1f °C".format(latestSuhu)
+
+                    val dataSet = LineDataSet(suhuEntries, "Suhu (°C)").apply {
+                        color = Color.BLUE
+                        valueTextColor = Color.BLACK
+                        lineWidth = 2f
+                        circleRadius = 4f
+                        setCircleColor(Color.BLUE)
+                        setDrawValues(false)
                     }
-                }
 
-                val dataSet = LineDataSet(suhuEntries, "Suhu (°C)").apply {
-                    color = Color.BLUE
-                    valueTextColor = Color.BLACK
-                    lineWidth = 2f
-                    circleRadius = 4f
-                    setCircleColor(Color.BLUE)
-                    setDrawValues(false)
-                }
+                    suhuChart.data = LineData(dataSet)
 
-                suhuChart.data = LineData(dataSet)
-
-                suhuChart.xAxis.valueFormatter = object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        val millis = value.toLong() * 1000
-                        val date = Date(millis)
-                        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-                        return format.format(date)
+                    suhuChart.xAxis.valueFormatter = object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            val millis = value.toLong() * 1000
+                            val date = Date(millis)
+                            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                            return format.format(date)
+                        }
                     }
-                }
 
-                val yAxis =suhuChart.axisLeft
-                yAxis.axisMinimum = 15f
-                yAxis.axisMaximum = 40f
-                suhuChart.axisRight.isEnabled = false
+                    val yAxis = suhuChart.axisLeft
+                    yAxis.axisMinimum = 15f
+                    yAxis.axisMaximum = 40f
+                    suhuChart.axisRight.isEnabled = false
 
-                suhuChart.description = Description().apply {
-                    text = "Riwayat Suhu (°C)"
-                    textColor = Color.DKGRAY
+                    suhuChart.description = Description().apply {
+                        text = "Riwayat Suhu (°C)"
+                        textColor = Color.DKGRAY
+                    }
+                    suhuChart.invalidate()
+                } else {
+                    txtSuhuValue.text = "Data suhu tidak tersedia"
+                    suhuChart.clear()
                 }
-                suhuChart.invalidate()
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("SuhuActivity", "Gagal membaca log suhu: ${error.message}")
+                txtSuhuValue.text = "Gagal membaca suhu"
             }
         })
     }

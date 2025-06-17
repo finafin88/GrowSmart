@@ -3,10 +3,7 @@ package com.growsmart.mobile
 import android.os.Bundle
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import android.widget.Button
 import android.widget.Toast
 import com.github.mikephil.charting.data.LineData
@@ -15,13 +12,11 @@ import android.graphics.Color
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.firebase.database.DatabaseReference
 import android.util.Log
 import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 
 class NutrisiActivity : BaseActivity() {
 
@@ -29,16 +24,12 @@ class NutrisiActivity : BaseActivity() {
     private lateinit var txtTdsValue: TextView
     private lateinit var btnNutrisiAB: Button
 
-    private lateinit var refLogTds: DatabaseReference
-    private lateinit var refNutrisiAB: DatabaseReference
     private lateinit var refLogTdsGrafik: DatabaseReference
-
-
-
+    private lateinit var refNutrisiAB: DatabaseReference
 
     private var isNutrisiOn: Boolean = false
     private val tdsEntries = ArrayList<Entry>()
-    private var indexCounter = 0f
+    private var sudahInteraksiManual = false
 
     override fun getLayoutResourceId(): Int = R.layout.activity_nutrisi
 
@@ -51,55 +42,14 @@ class NutrisiActivity : BaseActivity() {
         btnNutrisiAB = findViewById(R.id.btnNutrisiAB)
 
         val database = FirebaseDatabase.getInstance()
-        refLogTds = database.getReference("GrowSmart/sensor/tds")
         refLogTdsGrafik = database.getReference("GrowSmart/log/tds")
         refNutrisiAB = database.getReference("GrowSmart/status/manual/nutrisi_ab")
 
 
-        refLogTds.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val valueStr = snapshot.getValue(String::class.java)
-                val value = valueStr?.toFloatOrNull()
-
-                if (value != null) {
-                    txtTdsValue.text = "Nilai Nutrisi = %.1f ppm".format(value)
-
-
-                    tdsEntries.add(Entry(indexCounter++, value))
-                    val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
-                        color = Color.BLUE
-                        valueTextColor = Color.BLACK
-                        lineWidth = 2f
-                        circleRadius = 4f
-                        setCircleColor(Color.BLUE)
-                        setDrawValues(false)
-                        mode = LineDataSet.Mode.LINEAR
-                    }
-
-                    val lineData = LineData(dataSet)
-                    nutrisiChart.data = lineData
-
-                    val yAxis = nutrisiChart.axisLeft
-                    yAxis.axisMinimum = 0f
-                    yAxis.axisMaximum = 1000f
-                    nutrisiChart.axisRight.isEnabled = false
-
-                    nutrisiChart.description.text = "Grafik Nutrisi AB"
-                    nutrisiChart.invalidate()
-                } else {
-                    txtTdsValue.text = "Data tidak tersedia"
-                    nutrisiChart.clear()
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@NutrisiActivity, "Gagal ambil data: ${error.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-
         refLogTdsGrafik.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 tdsEntries.clear()
+
                 val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
 
                 for (data in sorted) {
@@ -109,6 +59,9 @@ class NutrisiActivity : BaseActivity() {
                 }
 
                 if (tdsEntries.isNotEmpty()) {
+                    val latestTds = tdsEntries.last().y
+                    txtTdsValue.text = "Nilai Nutrisi = %.1f ppm".format(latestTds)
+
                     val dataSet = LineDataSet(tdsEntries, "Nutrisi AB (ppm)").apply {
                         color = Color.BLUE
                         valueTextColor = Color.BLACK
@@ -136,6 +89,7 @@ class NutrisiActivity : BaseActivity() {
                     nutrisiChart.description.text = "Grafik Nutrisi AB"
                     nutrisiChart.invalidate()
                 } else {
+                    txtTdsValue.text = "Data tidak tersedia"
                     nutrisiChart.clear()
                 }
             }
@@ -160,7 +114,6 @@ class NutrisiActivity : BaseActivity() {
             }
         })
 
-
         btnNutrisiAB.setOnClickListener {
             val newValue = !isNutrisiOn
             refNutrisiAB.setValue(newValue)
@@ -173,7 +126,7 @@ class NutrisiActivity : BaseActivity() {
             showToastNutrisi(isNutrisiOn)
         }
     }
-    private var sudahInteraksiManual = false
+
     private fun updateButtonText() {
         btnNutrisiAB.text = if (isNutrisiOn) "Matikan Nutrisi AB" else "Nyalakan Nutrisi AB"
     }

@@ -134,24 +134,35 @@ class MainActivity : BaseActivity() {
 
 
     private fun tampilkanNilaiSensor() {
-        sensorRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val suhu = snapshot.child("suhu").getValue(String::class.java)
-                val ph = snapshot.child("ph").getValue(String::class.java)
-                val tds = snapshot.child("tds").getValue(String::class.java)
+        val paths = listOf("suhu", "ph", "tds")
+        val textViews = mapOf(
+            "suhu" to txtSuhu,
+            "ph" to txtPh,
+            "tds" to txtTds
+        )
 
-                txtSuhu.text = "Suhu: ${suhu ?: "--"} °C"
-                txtPh.text = "pH: ${ph ?: "--"}"
-                txtTds.text = "TDS: ${tds ?: "--"} ppm"
+        for (path in paths) {
+            logRef.child(path).limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var lastValue = "--"
+                    for (data in snapshot.children) {
+                        lastValue = data.getValue(String::class.java) ?: "--"
+                    }
 
-                Log.d("FirebaseSensor", "suhu=$suhu, ph=$ph, tds=$tds")
-            }
+                    when (path) {
+                        "suhu" -> textViews["suhu"]?.text = "Suhu: $lastValue °C"
+                        "ph" -> textViews["ph"]?.text = "pH: $lastValue"
+                        "tds" -> textViews["tds"]?.text = "TDS: $lastValue ppm"
+                    }
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("FirebaseSensor", "Gagal ambil data sensor: ${error.message}")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseLog", "Gagal ambil data $path: ${error.message}")
+                }
+            })
+        }
     }
+
 
     private fun tampilkanGrafikDariLog(kategori: String) {
         val entries = ArrayList<Entry>()

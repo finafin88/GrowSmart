@@ -25,7 +25,7 @@ class PhActivity : BaseActivity() {
     private lateinit var btnPhUp: Button
     private lateinit var btnPhDown: Button
 
-    private lateinit var sensorRef: DatabaseReference
+
     private lateinit var logPhRef: DatabaseReference
     private lateinit var controlRef: DatabaseReference
 
@@ -45,68 +45,62 @@ class PhActivity : BaseActivity() {
         btnPhDown = findViewById(R.id.btnPhDown)
 
         val database = FirebaseDatabase.getInstance()
-        val sensorRef = database.getReference("GrowSmart/sensor/ph")
         logPhRef = database.getReference("GrowSmart/log/ph")
         controlRef = database.getReference("GrowSmart/status/manual/ph")
 
 
-        sensorRef.addValueEventListener(object : ValueEventListener {
+        logPhRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.getValue<String>()
-                value?.let {
-                   txtPhValue.text = "Nilai pH = $it"
+                phEntries.clear()
+
+                val sorted = snapshot.children.sortedBy { it.key?.toLongOrNull() }
+
+                for (data in sorted) {
+                    val x = data.key?.toFloatOrNull() ?: continue
+                    val y = data.getValue(String::class.java)?.toFloatOrNull() ?: continue
+                    phEntries.add(Entry(x, y))
+                }
+
+                if (phEntries.isNotEmpty()) {
+                    val latestPh = phEntries.last().y
+                    txtPhValue.text = "Nilai pH = %.2f".format(latestPh)
+
+                    val dataSet = LineDataSet(phEntries, "Log pH Air").apply {
+                        lineWidth = 2f
+                        setDrawValues(false)
+                        setDrawCircles(true)
+                    }
+
+                    val lineData = LineData(dataSet)
+                    phChart.data = lineData
+
+                    phChart.xAxis.valueFormatter = object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            val millis = value.toLong() * 1000
+                            val date = Date(millis)
+                            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                            return format.format(date)
+                        }
+                    }
+
+                    val yAxis = phChart.axisLeft
+                    yAxis.axisMinimum = 0f
+                    yAxis.axisMaximum = 14f
+                    phChart.axisRight.isEnabled = false
+
+                    phChart.description.text = "Grafik pH"
+                    phChart.invalidate()
+                } else {
+                    txtPhValue.text = "Data pH tidak tersedia"
+                    phChart.clear()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 txtPhValue.text = "Gagal ambil data"
-            }
-        })
-
-        logPhRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                phEntries.clear()
-                var index = 0f
-                for (data in snapshot.children) {
-                    val value = data.getValue<String>()?.toFloatOrNull()
-                    if (value != null) {
-                        phEntries.add(Entry(index++, value))
-                    }
-                }
-                val dataSet = LineDataSet(phEntries, "Log pH Air")
-                dataSet.lineWidth = 2f
-                dataSet.setDrawValues(false)
-                dataSet.setDrawCircles(true)
-
-                val lineData = LineData(dataSet)
-                phChart.data = lineData
-
-                phChart.xAxis.valueFormatter = object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        val millis = value.toLong() * 1000
-                        val date = Date(millis)
-                        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-                        return format.format(date)
-                    }
-                }
-
-                val yAxis = phChart.axisLeft
-                yAxis.axisMinimum = -0f
-                yAxis.axisMaximum = 14f
-                phChart.axisRight.isEnabled = false
-
-                phChart.description.text = "Grafik pH"
-                phChart.invalidate()
-
-                phChart.data = LineData(dataSet)
-                phChart.invalidate()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(applicationContext, "Gagal ambil grafik pH", Toast.LENGTH_SHORT).show()
             }
         })
-
 
         btnPhUp.setOnClickListener {
             isPhUpOn = !isPhUpOn
