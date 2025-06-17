@@ -24,11 +24,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-
-
-
-
-
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class MainActivity : BaseActivity() {
@@ -194,6 +193,16 @@ class MainActivity : BaseActivity() {
                 }
 
                 chart.data = LineData(dataSet)
+
+                chart.xAxis.valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val millis = value.toLong() * 1000
+                        val date = Date(millis)
+
+                        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                        return format.format(date)
+                    }
+                }
 
                 val yAxis = chart.axisLeft
                 when (kategori) {

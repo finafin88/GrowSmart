@@ -17,7 +17,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.database.DatabaseReference
 import android.util.Log
-
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class NutrisiActivity : BaseActivity() {
@@ -117,6 +120,16 @@ class NutrisiActivity : BaseActivity() {
                     }
 
                     nutrisiChart.data = LineData(dataSet)
+
+                    nutrisiChart.xAxis.valueFormatter = object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            val millis = value.toLong() * 1000
+                            val date = Date(millis)
+                            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                            return format.format(date)
+                        }
+                    }
+
                     nutrisiChart.axisLeft.axisMinimum = 0f
                     nutrisiChart.axisLeft.axisMaximum = 1000f
                     nutrisiChart.axisRight.isEnabled = false
@@ -131,7 +144,6 @@ class NutrisiActivity : BaseActivity() {
                 Toast.makeText(this@NutrisiActivity, "Gagal ambil grafik: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
 
         refNutrisiAB.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

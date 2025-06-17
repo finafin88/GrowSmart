@@ -10,6 +10,10 @@ import com.github.mikephil.charting.components.Description
 import com.google.firebase.database.*
 import android.graphics.Color
 import android.util.Log
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SuhuActivity : BaseActivity() {
 
@@ -88,6 +92,15 @@ class SuhuActivity : BaseActivity() {
                 }
 
                 suhuChart.data = LineData(dataSet)
+
+                suhuChart.xAxis.valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val millis = value.toLong() * 1000
+                        val date = Date(millis)
+                        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                        return format.format(date)
+                    }
+                }
 
                 val yAxis =suhuChart.axisLeft
                 yAxis.axisMinimum = 15f

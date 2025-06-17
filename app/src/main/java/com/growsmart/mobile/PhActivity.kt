@@ -11,8 +11,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PhActivity : BaseActivity() {
 
@@ -76,6 +80,15 @@ class PhActivity : BaseActivity() {
 
                 val lineData = LineData(dataSet)
                 phChart.data = lineData
+
+                phChart.xAxis.valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val millis = value.toLong() * 1000
+                        val date = Date(millis)
+                        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+                        return format.format(date)
+                    }
+                }
 
                 val yAxis = phChart.axisLeft
                 yAxis.axisMinimum = -0f
