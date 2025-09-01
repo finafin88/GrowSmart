@@ -53,6 +53,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Login hanya untuk email @gmail.com", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            
 
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
